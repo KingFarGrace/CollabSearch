@@ -2,19 +2,20 @@ package main
 
 import (
 	"github.com/KingFarGrace/CollabSearch/server/conf"
+	"github.com/KingFarGrace/CollabSearch/server/router"
 	"github.com/KingFarGrace/CollabSearch/server/util"
+	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 	"strings"
 )
 
 func main() {
-	router := gin.New()
+	app := gin.New()
 	conf.InitLogger()
-	router.GET("/", func(context *gin.Context) {
-		context.JSON(200, gin.H{"msg": "Hello Gin!"})
-	})
+	app.Use(cors.New(conf.CorsConf))
+	router.InitRouter(app)
 	var addr = "localhost:8080"
-	err := router.Run(addr)
+	err := app.Run(addr)
 	if err != nil {
 		var build strings.Builder
 		build.WriteString("Err: ")
