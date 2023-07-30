@@ -12,6 +12,7 @@ import (
 func main() {
 	app := gin.New()
 	conf.InitLogger()
+	// Use cors as middleware
 	app.Use(cors.New(conf.CorsConf))
 	router.InitRouter(app)
 	var addr = "localhost:8080"
