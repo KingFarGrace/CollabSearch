@@ -5,6 +5,8 @@ import (
 	"os"
 )
 
+// InitLogger to activate logrus.
+// TODO: set level
 func InitLogger() {
 	log.SetFormatter(&log.JSONFormatter{})
 	log.SetOutput(os.Stdout)

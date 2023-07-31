@@ -2,9 +2,9 @@ package main
 
 import (
 	"github.com/KingFarGrace/CollabSearch/server/conf"
+	mw "github.com/KingFarGrace/CollabSearch/server/middleware"
 	"github.com/KingFarGrace/CollabSearch/server/router"
 	"github.com/KingFarGrace/CollabSearch/server/util"
-	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 	"strings"
 )
@@ -12,8 +12,8 @@ import (
 func main() {
 	app := gin.New()
 	conf.InitLogger()
-	// Use cors as middleware
-	app.Use(cors.New(conf.CorsConf))
+	conf.InitPersistenceLayer()
+	app.Use(mw.InitCors())
 	router.InitRouter(app)
 	var addr = "localhost:8080"
 	err := app.Run(addr)
