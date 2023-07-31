@@ -1,7 +1,7 @@
 package util
 
 import (
-	"encoding/json"
+	"github.com/bytedance/sonic"
 	"os"
 )
 
@@ -12,9 +12,9 @@ func ParseJSONFile(path string, obj interface{}) {
 		PlainErrorLogger(err, "ParseJSONFile()")
 		return
 	}
-	err = json.Unmarshal(data, &obj)
+	err = sonic.Unmarshal(data, &obj)
 	if err != nil {
-		PlainErrorLogger(err, "json.Unmarshal()")
+		PlainErrorLogger(err, "sonic.Unmarshal()")
 		return
 	}
 }
