@@ -12,7 +12,7 @@ func ParseJSONFile(path string, obj interface{}) {
 		PlainErrorLogger(err, "ParseJSONFile()")
 		return
 	}
-	err = sonic.Unmarshal(data, &obj)
+	err = sonic.Unmarshal(data, obj)
 	if err != nil {
 		PlainErrorLogger(err, "sonic.Unmarshal()")
 		return

@@ -24,12 +24,15 @@ func ServerLogger(ip string, msg string, level string) {
 	}
 }
 
+func LaunchLogger(service string, isSuccess bool) {
+	launchEntry := log.WithField("Service", service)
+	launchEntry.Debug("Success? ", isSuccess)
+}
+
 // PlainErrorLogger can log plain errors,
 // they are errors that terminate the function
 // but won't shut down the system.
 func PlainErrorLogger(err error, funcname string) {
-	plainErrorEntry := log.WithFields(log.Fields{
-		"Func": funcname,
-	})
+	plainErrorEntry := log.WithField("Func", funcname)
 	plainErrorEntry.Error("Error: ", err)
 }
