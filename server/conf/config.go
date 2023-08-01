@@ -47,7 +47,7 @@ type Cors struct {
 var configList *Config
 var once sync.Once
 
-const configPath = "config.json"
+const configPath = "conf/config.json"
 
 func GetConfig() *Config {
 	once.Do(func() {
@@ -62,4 +62,12 @@ func (this Config) GetXormConf() Xorm {
 
 func (this Config) GetXormConfs() []Xorm {
 	return this.Xorm
+}
+
+func (this Config) GetRedisConf() Redis {
+	return this.Redis[0]
+}
+
+func (this Config) GetRedisConfs() []Redis {
+	return this.Redis
 }

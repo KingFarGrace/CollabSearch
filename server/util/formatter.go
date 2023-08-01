@@ -7,6 +7,7 @@ import (
 
 // Concat is a function used to concatenate multiple strings.
 // Encapsulate the functionality of strings.Builder.
+// Allow string, bool and int input.
 func Concat(strs ...interface{}) string {
 	var builder strings.Builder
 	defer builder.Reset()

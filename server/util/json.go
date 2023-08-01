@@ -9,12 +9,12 @@ import (
 func ParseJSONFile(path string, obj interface{}) {
 	data, err := os.ReadFile(path)
 	if nil != err {
-		PlainErrorLogger(err, "ParseJSONFile()")
+		ErrorLogger(err, "ParseJSONFile()")
 		return
 	}
 	err = sonic.Unmarshal(data, obj)
 	if err != nil {
-		PlainErrorLogger(err, "sonic.Unmarshal()")
+		ErrorLogger(err, "sonic.Unmarshal()")
 		return
 	}
 }
