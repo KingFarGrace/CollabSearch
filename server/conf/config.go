@@ -2,6 +2,7 @@ package conf
 
 import (
 	"github.com/KingFarGrace/CollabSearch/server/util"
+	"path/filepath"
 	"sync"
 )
 
@@ -47,10 +48,15 @@ type Cors struct {
 var configList *Config
 var once sync.Once
 
-const configPath = "conf/config.json"
+const configRelativePath = "D:\\code\\CollabSearch\\server\\config.json"
 
 func GetConfig() *Config {
 	once.Do(func() {
+		configPath, err := filepath.Abs(configRelativePath)
+		if err != nil {
+			util.FatalLogger(err, "filepath.Abs()")
+			return
+		}
 		util.ParseJSONFile(configPath, &configList)
 	})
 	return configList

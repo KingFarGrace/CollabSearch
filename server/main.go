@@ -5,17 +5,17 @@ import (
 	mw "github.com/KingFarGrace/CollabSearch/server/middleware"
 	"github.com/KingFarGrace/CollabSearch/server/router"
 	"github.com/KingFarGrace/CollabSearch/server/util"
-	"github.com/gin-gonic/gin"
 	"strings"
 )
 
 func main() {
-	app := gin.New()
+	app := router.InitRouter()
 	conf.InitLogger()
 	conf.InitPersistenceLayer()
 	conf.InitCachingLayer()
+	// DO NOT use middleware here
+	// TODO: refactor
 	app.Use(mw.InitCors())
-	router.InitRouter(app)
 	var addr = "localhost:8080"
 	serverName := util.Concat("Server(", addr, ")")
 	err := app.Run(addr)
