@@ -12,16 +12,24 @@ func GetServiceEntry(service string) *log.Entry {
 	return log.WithField("Service", service)
 }
 
-// LaunchLogger will log every action to launch or start a service.
+// LaunchLogger can log every action to launch or start a service.
 // Include: DB, Log, server etc.
 func LaunchLogger(service string, isSuccess bool) {
 	launchEntry := GetServiceEntry(service)
 	launchEntry.Debug("Successfully launched? ", isSuccess)
 }
 
+// WarnLogger can log warning messages,
+// they are caused by inappropriate operation
+// that will lead to safe return or nothing.
+func WarnLogger(funcname, msg string) {
+	WarnEntry := GetFuncEntry(funcname)
+	WarnEntry.Warning("Warning: ", msg)
+}
+
 // ErrorLogger can log plain errors,
-// they are errors that terminate the function
-// but won't shut down the system.
+// they are caused by bugs that only terminate
+// running functions but never shut down the system.
 func ErrorLogger(err error, funcname string) {
 	errorEntry := GetFuncEntry(funcname)
 	errorEntry.Error("Error: ", err)

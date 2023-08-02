@@ -5,6 +5,7 @@ import (
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/redis/go-redis/v9"
 	"xorm.io/xorm"
+	"xorm.io/xorm/names"
 )
 
 var mysqlConf = GetConfig().GetXormConf()
@@ -38,6 +39,7 @@ func InitPersistenceLayer() {
 		util.FatalLogger(err, "xorm.NewEngine()")
 		return
 	}
+	mysqlEngine.SetMapper(names.GonicMapper{})
 	util.LaunchLogger("xorm", true)
 }
 
