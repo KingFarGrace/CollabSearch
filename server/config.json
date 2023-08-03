@@ -1,0 +1,29 @@
+{
+  "xorm": [
+    {
+      "driver": "mysql",
+      "username": "root",
+      "password": "132546",
+      "hostname": "localhost",
+      "port": 3306,
+      "database": "collabsearch",
+      "charset": "utf8",
+      "parseTime": true,
+      "loc": "Local"
+    }
+  ],
+  "redis": [
+    {
+      "hostname": "svm00483.ecs.soton.ac.uk",
+      "port": 6379,
+      "password": "132546",
+      "database": 0
+    }
+  ],
+  "cors": {
+    "AllowOrigins": ["*"],
+    "AllowMethods": ["GET", "POST", "PUT", "DELETE", "OPTION"],
+    "ExposeHeaders": ["Content-Length", "Content-Type", "Cache-Control", "Set-Token"],
+    "AllowCredentials": true
+  }
+}
