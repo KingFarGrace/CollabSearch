@@ -9,9 +9,9 @@ type Response struct {
 	Msg  string
 }
 
-func (receiver *Response) New(GroupCode, index int, msg ...string) {
+func (receiver *Response) New(GroupCode, index int, msg string) {
 	receiver.Code = GroupCode*100 + index
-	receiver.Msg = util.Concat(msg)
+	receiver.Msg = msg
 }
 
 func (receiver *Response) SetIndex(index int) {
@@ -22,8 +22,15 @@ func (receiver *Response) SetIndex(index int) {
 	receiver.Code = receiver.Code*100 + index
 }
 
-func (receiver *Response) SetMsg(msg ...string) {
-	receiver.Msg = util.Concat(msg)
+func (receiver *Response) SetMsg(msg string) {
+	receiver.Msg = msg
+}
+
+func (receiver *Response) Success() bool {
+	if receiver.Code%100 == 0 {
+		return true
+	}
+	return false
 }
 
 const AccountGroupCode = 1

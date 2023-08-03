@@ -8,8 +8,7 @@ import (
 
 var controllers = ctrl.Controllers
 
-// InitRouter
-// TODO: modularization
+// InitRouter to init Gin router module.
 func InitRouter() *gin.Engine {
 	router := gin.New()
 	router.Use(middleware.InitCors())

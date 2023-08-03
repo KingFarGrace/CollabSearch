@@ -21,13 +21,14 @@ func ExistEmail(email string) bool {
 	return exist
 }
 
-func InsertUser(user entity.User) {
+func InsertUser(user entity.User) bool {
 	engine := getEngine()
 	_, err := engine.Insert(user)
 	if err != nil {
 		util.ErrorLogger(err, "engine.Insert(user)")
-		return
+		return false
 	}
+	return true
 }
 
 func GetUserByUid(uid int64) *entity.User {
