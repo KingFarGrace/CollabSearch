@@ -2,7 +2,6 @@ package main
 
 import (
 	"github.com/KingFarGrace/CollabSearch/server/conf"
-	mw "github.com/KingFarGrace/CollabSearch/server/middleware"
 	"github.com/KingFarGrace/CollabSearch/server/router"
 	"github.com/KingFarGrace/CollabSearch/server/util"
 	"strings"
@@ -15,7 +14,6 @@ func main() {
 	conf.InitCachingLayer()
 	// DO NOT use middleware here
 	// TODO: refactor
-	app.Use(mw.InitCors())
 	var addr = "localhost:8080"
 	serverName := util.Concat("Server(", addr, ")")
 	err := app.Run(addr)

@@ -1,20 +1,22 @@
 package router
 
 import (
+	"github.com/KingFarGrace/CollabSearch/server/middleware"
 	ctrl "github.com/KingFarGrace/CollabSearch/server/router/controller"
 	"github.com/gin-gonic/gin"
 )
+
+var controllers = ctrl.Controllers
 
 // InitRouter
 // TODO: modularization
 func InitRouter() *gin.Engine {
 	router := gin.New()
-	router.GET("/", func(context *gin.Context) {
-		context.JSON(200, gin.H{"msg": "Hello Gin!"})
-	})
+	router.Use(middleware.InitCors())
 	noAuthGroup := router.Group("")
-	accountController := ctrl.AccountController{}
-	accountController.SetPath("user")
-	accountController.Register(noAuthGroup)
+	{
+		controllers.TestController.Register(noAuthGroup)
+		controllers.AccountController.Register(noAuthGroup)
+	}
 	return router
 }

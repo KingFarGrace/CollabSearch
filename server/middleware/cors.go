@@ -9,8 +9,5 @@ import (
 // InitCors activate CORS configuration.
 // @See conf.CorsConf
 func InitCors() gin.HandlerFunc {
-	return func(context *gin.Context) {
-		cors.New(conf.CorsConf)
-		context.Next()
-	}
+	return cors.New(conf.CorsConf)
 }

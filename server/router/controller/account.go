@@ -1,19 +1,28 @@
 package router
 
-import "github.com/gin-gonic/gin"
+import (
+	"github.com/gin-gonic/gin"
+	"net/http"
+)
 
-type AccountController struct {
-	RelativePath string
-}
+type AccountController struct{}
+type TestController struct{}
 
 func (receiver *AccountController) Register(routerGroup *gin.RouterGroup) {
-	accountGroup := routerGroup.Group(receiver.RelativePath)
+	accountGroup := routerGroup.Group("/user")
 	{
-		accountGroup.GET("")
-		accountGroup.POST("")
+		accountGroup.GET("", func(context *gin.Context) {
+			//
+			context.JSON(http.StatusOK, "login")
+		})
+		accountGroup.POST("", func(context *gin.Context) {
+			context.JSON(http.StatusOK, "register")
+		})
 	}
 }
 
-func (receiver *AccountController) SetPath(path string) {
-	receiver.RelativePath = path
+func (receiver *TestController) Register(routerGroup *gin.RouterGroup) {
+	routerGroup.GET("/", func(context *gin.Context) {
+		context.JSON(http.StatusOK, "Hello gin!")
+	})
 }
