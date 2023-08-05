@@ -37,3 +37,15 @@ func Register(registerJSON entity.RegisterJSON) *response.AccountResponse {
 		return resp
 	}
 }
+
+func LoginWithoutToken(loginJSON entity.LoginJSON) *response.AccountResponse {
+	resp := new(response.AccountResponse)
+	var user = mapper.GetUserByEmail(loginJSON.Email)
+	if user == nil {
+		msg := util.Concat("No such user. Email: ", loginJSON.Email)
+		resp.New(response.AccountGroupCode, 4, msg)
+		return resp
+	}
+	// TODO: Generate Token.
+	return resp
+}

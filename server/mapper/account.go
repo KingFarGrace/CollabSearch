@@ -1,15 +1,9 @@
 package mapper
 
 import (
-	"github.com/KingFarGrace/CollabSearch/server/conf"
 	"github.com/KingFarGrace/CollabSearch/server/entity"
 	"github.com/KingFarGrace/CollabSearch/server/util"
-	"xorm.io/xorm"
 )
-
-func getEngine() *xorm.Engine {
-	return conf.GetMySQLEngine()
-}
 
 func ExistEmail(email string) bool {
 	engine := getEngine()
