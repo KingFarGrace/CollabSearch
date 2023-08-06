@@ -23,6 +23,7 @@
   "cors": {
     "AllowOrigins": ["*"],
     "AllowMethods": ["GET", "POST", "PUT", "DELETE", "OPTION"],
+    "AllowHeaders": ["Origin", "Content-Length", "Content-Type", "Authorization"],
     "ExposeHeaders": ["Content-Length", "Content-Type", "Cache-Control", "Authorization"],
     "AllowCredentials": true
   }

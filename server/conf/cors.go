@@ -16,6 +16,7 @@ var corsConfig = GetConfig().Cors
 var CorsConf = cors.Config{
 	AllowOrigins:     corsConfig.AllowOrigins,
 	AllowMethods:     corsConfig.AllowMethods,
+	AllowHeaders:     corsConfig.AllowHeaders,
 	ExposeHeaders:    corsConfig.ExposeHeaders,
 	AllowCredentials: corsConfig.AllowCredentials,
 }

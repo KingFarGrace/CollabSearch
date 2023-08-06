@@ -1,11 +1,10 @@
 package middleware
 
 import (
+	"github.com/KingFarGrace/CollabSearch/server/conf"
 	"github.com/KingFarGrace/CollabSearch/server/util"
 	"github.com/gin-gonic/gin"
 )
-
-var salt = ""
 
 func JWTAuth() gin.HandlerFunc {
 	return func(context *gin.Context) {
@@ -15,7 +14,7 @@ func JWTAuth() gin.HandlerFunc {
 			context.Next()
 			return
 		}
-		if token := util.JWTValidate(jwt, salt); token == nil {
+		if token := util.JWTValidate(jwt, conf.Salt); token == nil {
 			context.Set("jwtAuth", false)
 			context.Next()
 			return
