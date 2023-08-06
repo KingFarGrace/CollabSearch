@@ -6,6 +6,7 @@ import (
 	"github.com/KingFarGrace/CollabSearch/server/mapper"
 	response "github.com/KingFarGrace/CollabSearch/server/router/response"
 	"github.com/KingFarGrace/CollabSearch/server/util"
+	"strings"
 )
 
 // TODO: Give an accurate path.
@@ -24,7 +25,7 @@ func Register(registerJSON entity.RegisterJSON) *response.AccountResponse {
 	uid := util.GetSnowflakeID(1).Int64()
 	user := entity.User{
 		Uid:      uid,
-		Email:    registerJSON.Email,
+		Email:    strings.ToLower(registerJSON.Email), // Resolve case sensitive issues.
 		Username: registerJSON.Username,
 		Password: registerJSON.Password,
 		Profile:  "Introduce yourself to others.",
@@ -45,7 +46,7 @@ func Register(registerJSON entity.RegisterJSON) *response.AccountResponse {
 // they should cache the user data in localstorage.
 func LoginWithoutToken(loginJSON entity.LoginJSON) (*response.AccountResponse, string) {
 	resp := new(response.AccountResponse)
-	var user = mapper.GetUserByEmail(loginJSON.Email)
+	var user = mapper.GetUserByEmail(strings.ToLower(loginJSON.Email))
 	if user == nil {
 		msg := util.Concat("No such user. Email: ", loginJSON.Email)
 		resp.New(response.AccountGroupCode, 4, msg)
@@ -55,7 +56,13 @@ func LoginWithoutToken(loginJSON entity.LoginJSON) (*response.AccountResponse, s
 		resp.New(response.AccountGroupCode, 5, "Wrong password.")
 		return resp, ""
 	}
-	token := util.GenerateJWT(loginJSON.Email, conf.Salt)
+	token := util.GenerateJWT(strings.ToLower(loginJSON.Email), conf.Salt)
 	resp.New(response.AccountGroupCode, 0, "Success.")
+	user.Password = "" // Block user privacy data.
+	resp.SetReturnObj(*user)
 	return resp, token.String()
+}
+
+func Update(user entity.User) {
+
 }

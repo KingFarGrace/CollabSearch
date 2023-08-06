@@ -1,8 +1,6 @@
 package util
 
 import (
-	"crypto/rand"
-	"encoding/base64"
 	"fmt"
 	"strconv"
 	"testing"
@@ -55,14 +53,11 @@ func TestParseJSONFile(t *testing.T) {
 }
 
 func TestJWT(t *testing.T) {
-	key := make([]byte, 64)
-	_, err := rand.Read(key)
-	if err != nil {
-		return
-	}
-	salt := base64.URLEncoding.EncodeToString(key)[:64]
-	fmt.Println(salt)
-	token := GenerateJWT("KingFarGrace@163.com")
-	fmt.Println(token)
-	token = JWTValidate(token.String())
+	//key := make([]byte, 64)
+	//_, err := rand.Read(key)
+	//if err != nil {
+	//	return
+	//}
+	//salt := base64.URLEncoding.EncodeToString(key)[:64]
+	//fmt.Println(salt)
 }

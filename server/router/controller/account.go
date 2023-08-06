@@ -16,7 +16,8 @@ func (receiver *AccountController) Register(routerGroup *gin.RouterGroup) {
 	// path: "/user", restful
 	accountGroup := routerGroup.Group("/user")
 	{
-		// GET "/user" -- Login
+		// GET "/user" -- service.Login
+		// TODO: TEST
 		accountGroup.Use(middleware.ValidateLoginJSON()).Use(middleware.JWTAuth()).GET("", func(context *gin.Context) {
 			jsonObj := context.MustGet("jsonObj").(entity.LoginJSON)
 			jwtAuth := context.MustGet("jwtAuth").(bool)
@@ -27,19 +28,19 @@ func (receiver *AccountController) Register(routerGroup *gin.RouterGroup) {
 			}
 			if resp, token := service.LoginWithoutToken(jsonObj); resp.Success() {
 				bearer := util.Concat("Bearer ", token)
-				context.Request.Header.Set("Authorization", bearer)
+				context.Header("Authorization", bearer)
 				context.JSON(http.StatusOK, resp)
 			} else {
 				context.JSON(http.StatusUnauthorized, resp)
 			}
 		})
-		// POST "/user" -- Register
+		// POST "/user" -- service.Register
 		accountGroup.Use(middleware.ValidateRegisterJSON()).POST("", func(context *gin.Context) {
 			jsonObj := context.MustGet("jsonObj").(entity.RegisterJSON)
-			if response := service.Register(jsonObj); response.Success() {
-				context.JSON(http.StatusOK, response)
+			if resp := service.Register(jsonObj); resp.Success() {
+				context.JSON(http.StatusOK, resp)
 			} else {
-				context.JSON(http.StatusUnprocessableEntity, response)
+				context.JSON(http.StatusUnprocessableEntity, resp)
 			}
 		})
 	}

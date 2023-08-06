@@ -56,3 +56,13 @@ func GetUserByEmail(email string) *entity.User {
 		return nil
 	}
 }
+
+// UpdateUserData can update table 'user'
+func UpdateUserData(newData entity.User) bool {
+	engine := getEngine()
+	_, err := engine.ID(newData.Uid).Update(newData)
+	if err != nil {
+		return false
+	}
+	return true
+}

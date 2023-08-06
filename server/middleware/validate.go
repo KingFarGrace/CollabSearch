@@ -4,6 +4,7 @@ import (
 	"github.com/KingFarGrace/CollabSearch/server/entity"
 	"github.com/KingFarGrace/CollabSearch/server/util"
 	"github.com/gin-gonic/gin"
+	"github.com/gin-gonic/gin/binding"
 	"github.com/go-playground/validator/v10"
 	"net/http"
 )
@@ -11,7 +12,7 @@ import (
 // ValidateRegisterJSON is a middleware to validate user register data.
 // @See RegisterJSON for detail validation rules.
 func ValidateRegisterJSON() gin.HandlerFunc {
-	var jsonObj entity.RegisterJSON
+	var jsonObj = entity.RegisterJSON{}
 	return validateJSON(jsonObj)
 }
 
@@ -19,7 +20,7 @@ func ValidateRegisterJSON() gin.HandlerFunc {
 // This middleware won't be handled if the request pass the token verification middleware.
 // @See LoginJSON for detail validation rules.
 func ValidateLoginJSON() gin.HandlerFunc {
-	var jsonObj entity.LoginJSON
+	var jsonObj = entity.LoginJSON{}
 	return validateJSON(jsonObj)
 }
 
@@ -27,10 +28,10 @@ func ValidateLoginJSON() gin.HandlerFunc {
 // An encapsulation of different middleware func.
 // Pass verified json obj or abort with return code http.StatusBadRequest.
 // jsonObj <T> should only be entities in package entity.
-func validateJSON[T entity.LoginJSON | entity.RegisterJSON](jsonObj T) gin.HandlerFunc {
+func validateJSON[T entity.RegisterJSON | entity.LoginJSON](jsonObj T) gin.HandlerFunc {
 	return func(context *gin.Context) {
-		if err := context.ShouldBindJSON(&jsonObj); err != nil {
-			context.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"msg": "Invalid request json."})
+		if err := context.ShouldBindBodyWith(&jsonObj, binding.JSON); err != nil {
+			context.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"msg": "Invalid request json.", "jsonObj": jsonObj})
 			return
 		}
 		if msg := valid(jsonObj); msg != "" {
@@ -44,7 +45,7 @@ func validateJSON[T entity.LoginJSON | entity.RegisterJSON](jsonObj T) gin.Handl
 
 // valid is an encapsulation of validate process.
 // Return errMsg if failed to validated json data, otherwise return ok (empty string).
-func valid[T entity.LoginJSON | entity.RegisterJSON](jsonObj T) string {
+func valid[T entity.RegisterJSON | entity.LoginJSON](jsonObj T) string {
 	validate := validator.New()
 	ok := ""
 	err := validate.Struct(jsonObj)
