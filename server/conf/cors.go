@@ -10,12 +10,12 @@ var corsConfig = GetConfig().Cors
 // CORS configuration
 // AllowOrigins - Any
 // AllowMethods - Except PATCH
-// ExposeHeaders - New field "Set-Token" to restore user token
 // AllowCredentials - Allow
 // Else default.
 var CorsConf = cors.Config{
 	AllowOrigins:     corsConfig.AllowOrigins,
 	AllowMethods:     corsConfig.AllowMethods,
+	AllowHeaders:     corsConfig.AllowHeaders,
 	ExposeHeaders:    corsConfig.ExposeHeaders,
 	AllowCredentials: corsConfig.AllowCredentials,
 }

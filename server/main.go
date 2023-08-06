@@ -12,8 +12,6 @@ func main() {
 	conf.InitLogger()
 	conf.InitPersistenceLayer()
 	conf.InitCachingLayer()
-	// DO NOT use middleware here
-	// TODO: refactor
 	var addr = "localhost:8080"
 	serverName := util.Concat("Server(", addr, ")")
 	err := app.Run(addr)

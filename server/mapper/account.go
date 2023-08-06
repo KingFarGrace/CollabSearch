@@ -1,15 +1,9 @@
 package mapper
 
 import (
-	"github.com/KingFarGrace/CollabSearch/server/conf"
 	"github.com/KingFarGrace/CollabSearch/server/entity"
 	"github.com/KingFarGrace/CollabSearch/server/util"
-	"xorm.io/xorm"
 )
-
-func getEngine() *xorm.Engine {
-	return conf.GetMySQLEngine()
-}
 
 func ExistEmail(email string) bool {
 	engine := getEngine()
@@ -61,4 +55,14 @@ func GetUserByEmail(email string) *entity.User {
 	} else {
 		return nil
 	}
+}
+
+// UpdateUserData can update table 'user'
+func UpdateUserData(newData entity.User) bool {
+	engine := getEngine()
+	_, err := engine.ID(newData.Uid).Update(newData)
+	if err != nil {
+		return false
+	}
+	return true
 }

@@ -51,3 +51,13 @@ func TestParseJSONFile(t *testing.T) {
 	ParseJSONFile("../conf/config.json", &test)
 	fmt.Printf("%v\n", test)
 }
+
+func TestJWT(t *testing.T) {
+	//key := make([]byte, 64)
+	//_, err := rand.Read(key)
+	//if err != nil {
+	//	return
+	//}
+	//salt := base64.URLEncoding.EncodeToString(key)[:64]
+	//fmt.Println(salt)
+}
