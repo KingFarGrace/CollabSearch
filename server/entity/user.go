@@ -2,12 +2,12 @@ package entity
 
 // User ORM model -- table 'user'
 type User struct {
-	Uid      int64  `xorm:"pk index" json:"uid" validate:"alpha, max=9223372036854775807"`
-	Email    string `xorm:"notnull" json:"email" validate:"email"`
-	Username string `xorm:"notnull" json:"username" validate:"alphanum,min=1,max=32"`
-	Password string `xorm:"notnull" json:"password" validate:"alphanumunicode,min=6,max=16"`
-	Profile  string `json:"profile" validate:"alphanumunicode"`
-	Avatar   string `xorm:"notnull" json:"avatar" validate:"url"`
+	Uid      int64  `xorm:"pk index" json:"uid" validate:"required,number,max=9223372036854775807"`
+	Email    string `xorm:"notnull" json:"email" validate:"omitempty,email"`
+	Username string `xorm:"notnull" json:"username" validate:"omitempty,alphanum,min=1,max=32"`
+	Password string `xorm:"notnull" json:"password" validate:"omitempty,alphanumunicode,min=6,max=16"`
+	Profile  string `json:"profile" validate:"omitempty,alphanumunicode|ascii"`
+	Avatar   string `xorm:"notnull" json:"avatar" validate:"omitempty,file"`
 }
 
 // RegisterJSON is a JSON entity to receive and pass user's sign up data.
