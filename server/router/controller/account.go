@@ -10,10 +10,8 @@ import (
 )
 
 type AccountController struct{}
-type TestController struct{}
 
 func (receiver *AccountController) Register(routerGroup *gin.RouterGroup) {
-	// path: "/user", restful
 	accountGroup := routerGroup.Group("/user")
 	{
 		// GET "/user" -- service.Login
@@ -58,10 +56,4 @@ func (receiver *AccountController) Register(routerGroup *gin.RouterGroup) {
 			}
 		})
 	}
-}
-
-func (receiver *TestController) Register(routerGroup *gin.RouterGroup) {
-	routerGroup.GET("/", func(context *gin.Context) {
-		context.JSON(http.StatusOK, "Hello gin!")
-	})
 }

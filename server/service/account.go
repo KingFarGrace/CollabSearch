@@ -46,7 +46,7 @@ func Register(registerJSON entity.RegisterJSON) *response.AccountResponse {
 // they should cache the user data in localstorage.
 func LoginWithoutToken(loginJSON entity.LoginJSON) (*response.AccountResponse, string) {
 	resp := new(response.AccountResponse)
-	var user = mapper.GetUserByEmail(strings.ToLower(loginJSON.Email))
+	var user = mapper.SelectUserByEmail(strings.ToLower(loginJSON.Email))
 	if user == nil {
 		msg := util.Concat("No such user. Email: ", loginJSON.Email)
 		resp.New(response.AccountGroupCode, 4, msg)
@@ -59,7 +59,7 @@ func LoginWithoutToken(loginJSON entity.LoginJSON) (*response.AccountResponse, s
 	token := util.GenerateJWT(strings.ToLower(loginJSON.Email), conf.Salt)
 	resp.New(response.AccountGroupCode, 0, "Success.")
 	user.Password = "" // Block user privacy data.
-	resp.SetReturnObj(*user)
+	resp.SetSingleReturnObj(user)
 	return resp, token.String()
 }
 

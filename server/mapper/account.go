@@ -17,15 +17,15 @@ func ExistEmail(email string) bool {
 
 func InsertUser(user entity.User) bool {
 	engine := getEngine()
-	_, err := engine.Insert(user)
-	if err != nil {
+	affected, err := engine.Insert(user)
+	if err != nil || affected == 0 {
 		util.ErrorLogger(err, "engine.Insert(user)")
 		return false
 	}
 	return true
 }
 
-func GetUserByUid(uid int64) *entity.User {
+func SelectUserByUid(uid int64) *entity.User {
 	engine := getEngine()
 	user := new(entity.User)
 	user.Uid = uid
@@ -41,13 +41,13 @@ func GetUserByUid(uid int64) *entity.User {
 	}
 }
 
-func GetUserByEmail(email string) *entity.User {
+func SelectUserByEmail(email string) *entity.User {
 	engine := getEngine()
 	user := new(entity.User)
 	user.Email = email
 	notEmpty, err := engine.Get(user)
 	if err != nil {
-		util.ErrorLogger(err, "GetUserByEmail()")
+		util.ErrorLogger(err, "SelectUserByEmail()")
 		return nil
 	}
 	if notEmpty {
@@ -57,7 +57,10 @@ func GetUserByEmail(email string) *entity.User {
 	}
 }
 
-// UpdateUserData can update table 'user'
+func SelectUsersByUsername(username string) []entity.User {
+	return nil
+}
+
 func UpdateUserData(newData entity.User) bool {
 	engine := getEngine()
 	infected, err := engine.ID(newData.Uid).Update(newData)

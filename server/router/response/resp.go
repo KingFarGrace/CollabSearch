@@ -5,8 +5,9 @@ import (
 )
 
 type Response struct {
-	Code int
-	Msg  string
+	Code       int
+	Msg        string
+	ReturnObjs []interface{}
 }
 
 func (receiver *Response) New(GroupCode, index int, msg string) {
@@ -26,6 +27,14 @@ func (receiver *Response) SetMsg(msg string) {
 	receiver.Msg = msg
 }
 
+func (receiver *Response) SetReturnObjs(objs []interface{}) {
+	receiver.ReturnObjs = objs
+}
+
+func (receiver *Response) SetSingleReturnObj(obj interface{}) {
+	receiver.ReturnObjs[0] = obj
+}
+
 func (receiver *Response) Success() bool {
 	if receiver.Code%100 == 0 {
 		return true
@@ -34,3 +43,4 @@ func (receiver *Response) Success() bool {
 }
 
 const AccountGroupCode = 1
+const WorkSpaceGroupCode = 2

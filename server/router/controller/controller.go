@@ -8,8 +8,9 @@ type Controller interface {
 }
 
 type controllers struct {
+	IndexController
 	AccountController
-	TestController
+	WorkspaceController
 }
 
 var Controllers = new(controllers)

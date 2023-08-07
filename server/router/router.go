@@ -12,10 +12,11 @@ var controllers = ctrl.Controllers
 func InitRouter() *gin.Engine {
 	router := gin.New()
 	router.Use(middleware.InitCors())
-	noAuthGroup := router.Group("")
+	routerGroup := router.Group("")
 	{
-		controllers.TestController.Register(noAuthGroup)
-		controllers.AccountController.Register(noAuthGroup)
+		controllers.IndexController.Register(routerGroup)
+		controllers.AccountController.Register(routerGroup)
+		controllers.WorkspaceController.Register(routerGroup)
 	}
 	return router
 }
