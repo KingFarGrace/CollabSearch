@@ -60,8 +60,8 @@ func GetUserByEmail(email string) *entity.User {
 // UpdateUserData can update table 'user'
 func UpdateUserData(newData entity.User) bool {
 	engine := getEngine()
-	_, err := engine.ID(newData.Uid).Update(newData)
-	if err != nil {
+	infected, err := engine.ID(newData.Uid).Update(newData)
+	if err != nil || infected == 0 {
 		return false
 	}
 	return true

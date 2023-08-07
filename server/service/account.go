@@ -63,6 +63,12 @@ func LoginWithoutToken(loginJSON entity.LoginJSON) (*response.AccountResponse, s
 	return resp, token.String()
 }
 
-func Update(user entity.User) {
-
+func Update(user entity.User) *response.AccountResponse {
+	resp := new(response.AccountResponse)
+	if mapper.UpdateUserData(user) {
+		resp.New(response.AccountGroupCode, 0, "Success.")
+		return resp
+	}
+	resp.New(response.AccountGroupCode, 6, "Failed to update user data.")
+	return resp
 }

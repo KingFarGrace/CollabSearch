@@ -1,6 +1,7 @@
 package middleware
 
 import (
+	"fmt"
 	"github.com/KingFarGrace/CollabSearch/server/entity"
 	"github.com/KingFarGrace/CollabSearch/server/util"
 	"github.com/gin-gonic/gin"
@@ -24,13 +25,19 @@ func ValidateLoginJSON() gin.HandlerFunc {
 	return validateJSON(jsonObj)
 }
 
+func ValidateUpdateJSON() gin.HandlerFunc {
+	var jsonObj = entity.User{}
+	return validateJSON(jsonObj)
+}
+
 // validateJSON
 // An encapsulation of different middleware func.
 // Pass verified json obj or abort with return code http.StatusBadRequest.
 // jsonObj <T> should only be entities in package entity.
-func validateJSON[T entity.RegisterJSON | entity.LoginJSON](jsonObj T) gin.HandlerFunc {
+func validateJSON[T entity.RegisterJSON | entity.LoginJSON | entity.User](jsonObj T) gin.HandlerFunc {
 	return func(context *gin.Context) {
 		if err := context.ShouldBindBodyWith(&jsonObj, binding.JSON); err != nil {
+			fmt.Printf("%v", jsonObj)
 			context.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"msg": "Invalid request json.", "jsonObj": jsonObj})
 			return
 		}
@@ -45,14 +52,14 @@ func validateJSON[T entity.RegisterJSON | entity.LoginJSON](jsonObj T) gin.Handl
 
 // valid is an encapsulation of validate process.
 // Return errMsg if failed to validated json data, otherwise return ok (empty string).
-func valid[T entity.RegisterJSON | entity.LoginJSON](jsonObj T) string {
+func valid[T entity.RegisterJSON | entity.LoginJSON | entity.User](jsonObj T) string {
 	validate := validator.New()
 	ok := ""
 	err := validate.Struct(jsonObj)
 	if err != nil {
-		errMsg := "Validate failed at: "
+		errMsg := "Validate failed at:"
 		for _, err := range err.(validator.ValidationErrors) {
-			errMsg = util.Concat(errMsg, "\n", err.StructNamespace(), " ", err.Value())
+			errMsg = util.Concat(errMsg, " ", err.StructNamespace())
 		}
 		return errMsg
 	}

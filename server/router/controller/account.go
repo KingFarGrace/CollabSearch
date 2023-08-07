@@ -17,8 +17,7 @@ func (receiver *AccountController) Register(routerGroup *gin.RouterGroup) {
 	accountGroup := routerGroup.Group("/user")
 	{
 		// GET "/user" -- service.Login
-		// TODO: TEST
-		accountGroup.Use(middleware.ValidateLoginJSON()).Use(middleware.JWTAuth()).GET("", func(context *gin.Context) {
+		accountGroup.GET("", middleware.ValidateLoginJSON(), middleware.JWTAuth(), func(context *gin.Context) {
 			jsonObj := context.MustGet("jsonObj").(entity.LoginJSON)
 			jwtAuth := context.MustGet("jwtAuth").(bool)
 			if jwtAuth {
@@ -35,9 +34,24 @@ func (receiver *AccountController) Register(routerGroup *gin.RouterGroup) {
 			}
 		})
 		// POST "/user" -- service.Register
-		accountGroup.Use(middleware.ValidateRegisterJSON()).POST("", func(context *gin.Context) {
+		accountGroup.POST("", middleware.ValidateRegisterJSON(), func(context *gin.Context) {
 			jsonObj := context.MustGet("jsonObj").(entity.RegisterJSON)
 			if resp := service.Register(jsonObj); resp.Success() {
+				context.JSON(http.StatusOK, resp)
+			} else {
+				context.JSON(http.StatusUnprocessableEntity, resp)
+			}
+		})
+		// PUT "/user" -- service.Update
+		accountGroup.PUT("", middleware.ValidateUpdateJSON(), middleware.JWTAuth(), func(context *gin.Context) {
+			jsonObj := context.MustGet("jsonObj").(entity.User)
+			jwtAuth := context.MustGet("jwtAuth").(bool)
+			if !jwtAuth {
+				// User data has been cached in the front-end or they won't get a legal token.
+				context.JSON(http.StatusUnauthorized, gin.H{"msg": "Authentication required."})
+				return
+			}
+			if resp := service.Update(jsonObj); resp.Success() {
 				context.JSON(http.StatusOK, resp)
 			} else {
 				context.JSON(http.StatusUnprocessableEntity, resp)
