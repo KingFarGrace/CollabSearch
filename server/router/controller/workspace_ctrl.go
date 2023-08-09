@@ -33,21 +33,8 @@ func (receiver WorkspaceController) Register(router *gin.RouterGroup) {
 			middleware.ValidateUidJSON(),
 			middleware.JWTInterceptor(),
 			func(context *gin.Context) {
-				jsonObj := context.MustGet("jsonObj").(int64)
-				if resp := service.GetWorkspaces(jsonObj, false); resp.Success() {
-					context.JSON(http.StatusOK, resp)
-				} else {
-					context.JSON(http.StatusUnprocessableEntity, resp)
-				}
-			})
-		// PUT "/workspace/"
-		workspaceGroup.PUT(
-			"",
-			middleware.ValidateWorkspaceJSON(),
-			middleware.JWTInterceptor(),
-			func(context *gin.Context) {
-				jsonObj := context.MustGet("jsonObj").(entity.Workspace)
-				if resp := service.UpdateWorkspace(jsonObj); resp.Success() {
+				jsonObj := context.MustGet("jsonObj").(entity.UidJSON)
+				if resp := service.GetWorkspaces(jsonObj.Uid, false); resp.Success() {
 					context.JSON(http.StatusOK, resp)
 				} else {
 					context.JSON(http.StatusUnprocessableEntity, resp)
@@ -57,10 +44,23 @@ func (receiver WorkspaceController) Register(router *gin.RouterGroup) {
 		workspaceGroup.GET(
 			"/handler",
 			middleware.ValidateUidJSON(),
-			middleware.ValidateRegisterJSON(),
+			middleware.JWTInterceptor(),
 			func(context *gin.Context) {
-				jsonObj := context.MustGet("jsonObj").(int64)
-				if resp := service.GetWorkspaces(jsonObj, true); resp.Success() {
+				jsonObj := context.MustGet("jsonObj").(entity.UidJSON)
+				if resp := service.GetWorkspaces(jsonObj.Uid, true); resp.Success() {
+					context.JSON(http.StatusOK, resp)
+				} else {
+					context.JSON(http.StatusUnprocessableEntity, resp)
+				}
+			})
+		// PUT "/workspace"
+		workspaceGroup.PUT(
+			"",
+			middleware.ValidateWorkspaceJSON(),
+			middleware.JWTInterceptor(),
+			func(context *gin.Context) {
+				jsonObj := context.MustGet("jsonObj").(entity.Workspace)
+				if resp := service.UpdateWorkspace(jsonObj); resp.Success() {
 					context.JSON(http.StatusOK, resp)
 				} else {
 					context.JSON(http.StatusUnprocessableEntity, resp)
