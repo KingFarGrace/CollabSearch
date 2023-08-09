@@ -14,13 +14,13 @@ func CreateWorkspace(workspace entity.Workspace) *response.WorkspaceResponse {
 	if !cvt || !mapper.InsertWorkspace(workspace) {
 		return getFailedWorkspaceResp(1, "Failed to create the workspace.")
 	}
-	return getSuccessWorkspaceRespWithoutObjs()
+	return getSuccessWorkspaceResp()
 }
 
 // JoinWorkspace allow user to join an existing workspace.
 func JoinWorkspace(uw entity.UserWorkspace) *response.WorkspaceResponse {
 	if mapper.InsertUserWorkspace(uw) {
-		return getSuccessWorkspaceRespWithoutObjs()
+		return getSuccessWorkspaceResp()
 	}
 	return getFailedWorkspaceResp(2, "Failed to join the workspace.")
 }
@@ -36,12 +36,12 @@ func GetWorkspaces(id int64, isHandler bool) *response.WorkspaceResponse {
 	if isHandler {
 		workspaces = mapper.SelectWorkspacesByHandler(id)
 		if workspaces != nil {
-			return getSuccessWorkspaceRespWithObjs(workspaces)
+			return getSuccessWorkspaceResp(workspaces...)
 		}
 	} else {
 		workspaces = mapper.SelectWorkspacesByUid(id)
 		if workspaces != nil {
-			return getSuccessWorkspaceRespWithObjs(workspaces)
+			return getSuccessWorkspaceResp(workspaces...)
 		}
 	}
 	return getFailedWorkspaceResp(4, "Failed to get workspaces information.")
@@ -54,25 +54,15 @@ func UpdateWorkspace(workspace entity.Workspace) *response.WorkspaceResponse {
 	if !cvt || !mapper.UpdateWorkspace(workspace) {
 		return getFailedWorkspaceResp(3, "Failed to update workspace information.")
 	}
-	return getSuccessWorkspaceRespWithoutObjs()
+	return getSuccessWorkspaceResp()
 }
 
-func getSuccessWorkspaceRespWithoutObjs() *response.WorkspaceResponse {
+func getSuccessWorkspaceResp(workspaces ...entity.Workspace) *response.WorkspaceResponse {
 	resp := new(response.WorkspaceResponse)
 	resp.New(response.WorkspaceGroupCode, 0, "Success")
-	return resp
-}
-
-func getSuccessWorkspaceRespWithObj(workspace entity.Workspace) *response.WorkspaceResponse {
-	resp := new(response.WorkspaceResponse)
-	resp.New(response.WorkspaceGroupCode, 0, "Success")
-	resp.SetReturnObj(workspace)
-	return resp
-}
-
-func getSuccessWorkspaceRespWithObjs(workspaces []entity.Workspace) *response.WorkspaceResponse {
-	resp := new(response.WorkspaceResponse)
-	resp.New(response.WorkspaceGroupCode, 0, "Success")
+	if len(workspaces) == 0 {
+		return resp
+	}
 	resp.SetReturnObjs(workspaces)
 	return resp
 }

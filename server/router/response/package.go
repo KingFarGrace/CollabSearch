@@ -7,9 +7,7 @@ import (
 // HasPayload interface allow implementors set return objs.
 type HasPayload interface {
 	// SetReturnObjs to set a slice of return objs.
-	SetReturnObjs(interface{})
-	// SetReturnObj to set return obj to return slice[0].
-	SetReturnObj(interface{})
+	SetReturnObjs(objs interface{})
 }
 
 type Response struct {

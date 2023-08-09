@@ -30,7 +30,7 @@ func Register(registerJSON entity.RegisterJSON) *response.AccountResponse {
 		Avatar:   defaultAvatarPath,
 	}
 	if success := mapper.InsertUser(user); success {
-		return getSuccessAccountRespWithoutObjs()
+		return getSuccessAccountResp()
 	} else {
 		return getFailedAccountResp(2, "Failed to sign up, please try later.")
 	}
@@ -51,32 +51,22 @@ func LoginWithoutToken(loginJSON entity.LoginJSON) (*response.AccountResponse, s
 	}
 	token := util.GenerateJWT(strings.ToLower(loginJSON.Email), conf.Salt)
 	user.Password = "" // Block user privacy data.
-	return getSuccessAccountRespWithObj(*user), token.String()
+	return getSuccessAccountResp(*user), token.String()
 }
 
 func UpdateUser(user entity.User) *response.AccountResponse {
 	if mapper.UpdateUser(user) {
-		return getSuccessAccountRespWithoutObjs()
+		return getSuccessAccountResp()
 	}
 	return getFailedAccountResp(5, "Failed to update user data.")
 }
 
-func getSuccessAccountRespWithoutObjs() *response.AccountResponse {
+func getSuccessAccountResp(users ...entity.User) *response.AccountResponse {
 	resp := new(response.AccountResponse)
-	resp.New(response.AccountGroupCode, 0, "Success")
-	return resp
-}
-
-func getSuccessAccountRespWithObj(user entity.User) *response.AccountResponse {
-	resp := new(response.AccountResponse)
-	resp.New(response.AccountGroupCode, 0, "Success")
-	resp.SetReturnObj(user)
-	return resp
-}
-
-func getSuccessAccountRespWithObjs(users []entity.User) *response.AccountResponse {
-	resp := new(response.AccountResponse)
-	resp.New(response.AccountGroupCode, 0, "Success")
+	resp.New(response.AccountGroupCode, 0, "Success.")
+	if len(users) == 0 {
+		return resp
+	}
 	resp.SetReturnObjs(users)
 	return resp
 }
