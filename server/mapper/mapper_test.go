@@ -15,7 +15,13 @@ func TestInsertWorkspace(t *testing.T) {
 		Topic:       "Test workspace 2",
 		Description: "Here is a test.",
 		Handler:     1688259015886245888,
-		Due:         time.Now(),
+		DueString:   "2023-08-10 00:00:00",
+	}
+	var err error
+	workspace.Due, err = time.Parse("2006-01-02 15:04:05", workspace.DueString)
+	if err != nil {
+		t.Errorf("Failed to parse datetime.")
+		return
 	}
 	if !InsertWorkspace(workspace) {
 		t.Errorf("Failed to insert workspace.")

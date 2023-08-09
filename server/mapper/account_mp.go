@@ -61,7 +61,7 @@ func SelectUsersByUsername(username string) []entity.User {
 	return nil
 }
 
-func UpdateUserData(newData entity.User) bool {
+func UpdateUser(newData entity.User) bool {
 	engine := getEngine()
 	infected, err := engine.ID(newData.Uid).Update(newData)
 	if err != nil || infected == 0 {

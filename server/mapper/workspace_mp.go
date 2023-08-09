@@ -53,3 +53,12 @@ func SelectWorkspacesByHandler(handlerID int64) []entity.Workspace {
 	}
 	return workspaces
 }
+
+func UpdateWorkspace(workspace entity.Workspace) bool {
+	engine := getEngine()
+	affected, err := engine.ID(workspace.Wid).Update(workspace)
+	if err != nil || affected == 0 {
+		return false
+	}
+	return true
+}

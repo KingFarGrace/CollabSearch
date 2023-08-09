@@ -11,22 +11,37 @@ import (
 )
 
 // ValidateRegisterJSON is a middleware to validate user register data.
-// @See RegisterJSON for detail validation rules.
+// @See entity.RegisterJSON for detail validation rules.
 func ValidateRegisterJSON() gin.HandlerFunc {
-	var jsonObj = entity.RegisterJSON{}
+	var jsonObj entity.RegisterJSON
 	return validateJSON(jsonObj)
 }
 
 // ValidateLoginJSON is a middleware to validate user login data.
-// This middleware won't be handled if the request pass the token verification middleware.
-// @See LoginJSON for detail validation rules.
+// @See entity.LoginJSON for detail validation rules.
 func ValidateLoginJSON() gin.HandlerFunc {
-	var jsonObj = entity.LoginJSON{}
+	var jsonObj entity.LoginJSON
 	return validateJSON(jsonObj)
 }
 
+// ValidateUpdateJSON is a middleware to validate user update data.
+// @See entity.User for detail validation rules.
 func ValidateUpdateJSON() gin.HandlerFunc {
-	var jsonObj = entity.User{}
+	var jsonObj entity.User
+	return validateJSON(jsonObj)
+}
+
+// ValidateWorkspaceJSON is a middleware to validate workspace data.
+// @See entity.Workspace for detail validation rules.
+func ValidateWorkspaceJSON() gin.HandlerFunc {
+	var jsonObj entity.Workspace
+	return validateJSON(jsonObj)
+}
+
+// ValidateUserWorkspaceJSON is a middleware to validate user_workspace data.
+// @See entity.UserWorkspace for detail validation rules.
+func ValidateUserWorkspaceJSON() gin.HandlerFunc {
+	var jsonObj entity.Workspace
 	return validateJSON(jsonObj)
 }
 
@@ -34,7 +49,12 @@ func ValidateUpdateJSON() gin.HandlerFunc {
 // An encapsulation of different middleware func.
 // Pass verified json obj or abort with return code http.StatusBadRequest.
 // jsonObj <T> should only be entities in package entity.
-func validateJSON[T entity.RegisterJSON | entity.LoginJSON | entity.User](jsonObj T) gin.HandlerFunc {
+func validateJSON[
+	T entity.RegisterJSON |
+		entity.LoginJSON |
+		entity.User |
+		entity.Workspace |
+		entity.UserWorkspace](jsonObj T) gin.HandlerFunc {
 	return func(context *gin.Context) {
 		if err := context.ShouldBindBodyWith(&jsonObj, binding.JSON); err != nil {
 			fmt.Printf("%v", jsonObj)
@@ -52,7 +72,12 @@ func validateJSON[T entity.RegisterJSON | entity.LoginJSON | entity.User](jsonOb
 
 // valid is an encapsulation of validate process.
 // Return errMsg if failed to validated json data, otherwise return ok (empty string).
-func valid[T entity.RegisterJSON | entity.LoginJSON | entity.User](jsonObj T) string {
+func valid[
+	T entity.RegisterJSON |
+		entity.LoginJSON |
+		entity.User |
+		entity.Workspace |
+		entity.UserWorkspace](jsonObj T) string {
 	validate := validator.New()
 	ok := ""
 	err := validate.Struct(jsonObj)

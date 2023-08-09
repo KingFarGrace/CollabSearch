@@ -19,7 +19,7 @@ func Register(registerJSON entity.RegisterJSON) *response.AccountResponse {
 	resp := new(response.AccountResponse)
 	if mapper.ExistEmail(registerJSON.Email) {
 		msg := util.Concat("Duplicated user email: ", registerJSON.Email)
-		resp.New(response.AccountGroupCode, 2, msg)
+		resp.New(response.AccountGroupCode, 1, msg)
 		return resp
 	}
 	uid := util.GetSnowflakeID(1).Int64()
@@ -35,7 +35,7 @@ func Register(registerJSON entity.RegisterJSON) *response.AccountResponse {
 		resp.New(response.AccountGroupCode, 0, "Success.")
 		return resp
 	} else {
-		resp.New(response.AccountGroupCode, 3, "Failed to sign up, please try later.")
+		resp.New(response.AccountGroupCode, 2, "Failed to sign up, please try later.")
 		return resp
 	}
 }
@@ -53,22 +53,24 @@ func LoginWithoutToken(loginJSON entity.LoginJSON) (*response.AccountResponse, s
 		return resp, ""
 	}
 	if user.Password != loginJSON.Password {
-		resp.New(response.AccountGroupCode, 5, "Wrong password.")
+		resp.New(response.AccountGroupCode, 3, "Wrong password.")
 		return resp, ""
 	}
 	token := util.GenerateJWT(strings.ToLower(loginJSON.Email), conf.Salt)
 	resp.New(response.AccountGroupCode, 0, "Success.")
 	user.Password = "" // Block user privacy data.
-	resp.SetSingleReturnObj(user)
+	resp.SetReturnObj(*user)
 	return resp, token.String()
 }
 
-func Update(user entity.User) *response.AccountResponse {
+func UpdateUser(user entity.User) *response.AccountResponse {
 	resp := new(response.AccountResponse)
-	if mapper.UpdateUserData(user) {
+	if mapper.UpdateUser(user) {
 		resp.New(response.AccountGroupCode, 0, "Success.")
+		resp.SetReturnObjs(nil)
 		return resp
 	}
-	resp.New(response.AccountGroupCode, 6, "Failed to update user data.")
+	resp.New(response.AccountGroupCode, 5, "Failed to update user data.")
+	resp.SetReturnObjs(nil)
 	return resp
 }

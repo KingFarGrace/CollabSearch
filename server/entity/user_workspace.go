@@ -1,8 +1,8 @@
 package entity
 
 type UserWorkspace struct {
-	Uid int64 `json:"uid" xorm:"pk"`
-	Wid int   `json:"wid" xorm:"pk"`
+	Uid int64 `json:"uid" xorm:"pk" validate:"required,number"`
+	Wid int   `json:"wid" xorm:"pk" validate:"required,number"`
 }
 
 type UserWorkspaceJoin struct {

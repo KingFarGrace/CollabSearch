@@ -4,10 +4,17 @@ import (
 	"github.com/KingFarGrace/CollabSearch/server/util"
 )
 
+// HasPayload interface allow implementors set return objs.
+type HasPayload interface {
+	// SetReturnObjs to set a slice of return objs.
+	SetReturnObjs(interface{})
+	// SetReturnObj to set return obj to return slice[0].
+	SetReturnObj(interface{})
+}
+
 type Response struct {
-	Code       int
-	Msg        string
-	ReturnObjs []interface{}
+	Code int
+	Msg  string
 }
 
 func (receiver *Response) New(GroupCode, index int, msg string) {
@@ -27,14 +34,6 @@ func (receiver *Response) SetMsg(msg string) {
 	receiver.Msg = msg
 }
 
-func (receiver *Response) SetReturnObjs(objs []interface{}) {
-	receiver.ReturnObjs = objs
-}
-
-func (receiver *Response) SetSingleReturnObj(obj interface{}) {
-	receiver.ReturnObjs[0] = obj
-}
-
 func (receiver *Response) Success() bool {
 	if receiver.Code%100 == 0 {
 		return true
@@ -43,4 +42,4 @@ func (receiver *Response) Success() bool {
 }
 
 const AccountGroupCode = 1
-const WorkSpaceGroupCode = 2
+const WorkspaceGroupCode = 2
