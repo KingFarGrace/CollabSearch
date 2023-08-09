@@ -4,6 +4,12 @@ import (
 	"github.com/KingFarGrace/CollabSearch/server/util"
 )
 
+// HasPayload interface allow implementors set return objs.
+type HasPayload interface {
+	// SetReturnObjs to set a slice of return objs.
+	SetReturnObjs(objs interface{})
+}
+
 type Response struct {
 	Code int
 	Msg  string
@@ -34,3 +40,4 @@ func (receiver *Response) Success() bool {
 }
 
 const AccountGroupCode = 1
+const WorkspaceGroupCode = 2

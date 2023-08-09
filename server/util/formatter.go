@@ -3,6 +3,7 @@ package util
 import (
 	"strconv"
 	"strings"
+	"time"
 )
 
 // Concat is a function used to concatenate multiple strings.
@@ -31,4 +32,20 @@ func Concat(strs ...interface{}) string {
 		}
 	}
 	return builder.String()
+}
+
+func String2Time(timeStr string) (time.Time, bool) {
+	t, err := time.Parse("2006-01-02 15:04:05", timeStr)
+	if err != nil {
+		return t, false
+	}
+	return t, true
+}
+
+func String2Int64(str string) (int64, bool) {
+	i, err := strconv.ParseInt(str, 10, 64)
+	if err != nil {
+		return i, false
+	}
+	return i, true
 }

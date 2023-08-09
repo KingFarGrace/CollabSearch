@@ -5,14 +5,14 @@ import (
 	"github.com/KingFarGrace/CollabSearch/server/util"
 )
 
-type AccountResponse struct {
+type WorkspaceResponse struct {
 	Response
-	Users []entity.User
+	Workspaces []entity.Workspace
 }
 
-func (receiver *AccountResponse) SetReturnObjs(objs interface{}) {
-	if users, ok := objs.([]entity.User); ok {
-		receiver.Users = users
+func (receiver *WorkspaceResponse) SetReturnObjs(objs interface{}) {
+	if workspaces, ok := objs.([]entity.Workspace); ok {
+		receiver.Workspaces = workspaces
 	} else {
 		util.WarnLogger("SetReturnObjs()", "Failed to set return objs.")
 	}

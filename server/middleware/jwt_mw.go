@@ -4,10 +4,11 @@ import (
 	"github.com/KingFarGrace/CollabSearch/server/conf"
 	"github.com/KingFarGrace/CollabSearch/server/util"
 	"github.com/gin-gonic/gin"
+	"net/http"
 )
 
-// JWTAuth is not a filter or interceptor. It will pass the request to next
-// function in every situation, and set a flag "jwtAuth" to indicate whether the
+// JWTAuth is not a filter or interceptor. It will pass the request to following
+// functions in every situation, and set a flag "jwtAuth" to indicate whether the
 // request pass JWT Authentication for following functions.
 func JWTAuth() gin.HandlerFunc {
 	return func(context *gin.Context) {
@@ -25,6 +26,19 @@ func JWTAuth() gin.HandlerFunc {
 			return
 		}
 		context.Set("jwtAuth", true)
+		context.Next()
+	}
+}
+
+// JWTInterceptor will abort the request without JWT authentication.
+// In most cases, this middleware should only be used after JWTAuth.
+func JWTInterceptor() gin.HandlerFunc {
+	return func(context *gin.Context) {
+		jwtAuth := context.MustGet("jwtAuth").(bool)
+		if !jwtAuth {
+			context.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"msg": "Authentication required."})
+			return
+		}
 		context.Next()
 	}
 }
