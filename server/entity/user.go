@@ -24,6 +24,11 @@ type LoginJSON struct {
 	Password string `json:"Password" validate:"required,alphanum|ascii,min=6,max=16"`
 }
 
+// UidJSON is a JSON entity to receive and pass user ID.
+type UidJSON struct {
+	Uid int64 `json:"uid" validate:"required,number,max=9223372036854775807"`
+}
+
 // TokenClaims is a JSON entity used to initialize a token
 type TokenClaims struct {
 	Email string `json:"email"`

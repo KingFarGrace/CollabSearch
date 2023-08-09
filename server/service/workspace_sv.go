@@ -12,9 +12,9 @@ var emptyWorkspaces = make([]entity.Workspace, 0)
 // CreateWorkspace can create a new workspace.
 func CreateWorkspace(workspace entity.Workspace) *router.WorkspaceResponse {
 	resp := new(router.WorkspaceResponse)
-	var err error
-	workspace.Due, err = util.String2Time(workspace.DueString)
-	if err != nil || !mapper.InsertWorkspace(workspace) {
+	var cvt bool
+	workspace.Due, cvt = util.String2Time(workspace.DueString)
+	if !cvt || !mapper.InsertWorkspace(workspace) {
 		resp.New(router.WorkspaceGroupCode, 1, "Failed to create the workspace.")
 		resp.SetReturnObjs(emptyWorkspaces)
 		return resp
@@ -69,9 +69,9 @@ func GetWorkspaces(id int64, isHandler bool) *router.WorkspaceResponse {
 // UpdateWorkspace allow handler to update the information of a workspace.
 func UpdateWorkspace(workspace entity.Workspace) *router.WorkspaceResponse {
 	resp := new(router.WorkspaceResponse)
-	var err error
-	workspace.Due, err = util.String2Time(workspace.DueString)
-	if err != nil || !mapper.UpdateWorkspace(workspace) {
+	var cvt bool
+	workspace.Due, cvt = util.String2Time(workspace.DueString)
+	if !cvt || !mapper.UpdateWorkspace(workspace) {
 		resp.New(router.WorkspaceGroupCode, 3, "Failed to update workspace information.")
 		resp.SetReturnObjs(emptyWorkspaces)
 		return resp

@@ -31,6 +31,11 @@ func ValidateUpdateJSON() gin.HandlerFunc {
 	return validateJSON(jsonObj)
 }
 
+func ValidateUidJSON() gin.HandlerFunc {
+	var jsonObj entity.UidJSON
+	return validateJSON(jsonObj)
+}
+
 // ValidateWorkspaceJSON is a middleware to validate workspace data.
 // @See entity.Workspace for detail validation rules.
 func ValidateWorkspaceJSON() gin.HandlerFunc {
@@ -54,7 +59,8 @@ func validateJSON[
 		entity.LoginJSON |
 		entity.User |
 		entity.Workspace |
-		entity.UserWorkspace](jsonObj T) gin.HandlerFunc {
+		entity.UserWorkspace |
+		entity.UidJSON](jsonObj T) gin.HandlerFunc {
 	return func(context *gin.Context) {
 		if err := context.ShouldBindBodyWith(&jsonObj, binding.JSON); err != nil {
 			fmt.Printf("%v", jsonObj)
@@ -77,7 +83,8 @@ func valid[
 		entity.LoginJSON |
 		entity.User |
 		entity.Workspace |
-		entity.UserWorkspace](jsonObj T) string {
+		entity.UserWorkspace |
+		entity.UidJSON](jsonObj T) string {
 	validate := validator.New()
 	ok := ""
 	err := validate.Struct(jsonObj)
