@@ -46,7 +46,7 @@ func ValidateWorkspaceJSON() gin.HandlerFunc {
 // ValidateUserWorkspaceJSON is a middleware to validate user_workspace data.
 // @See entity.UserWorkspace for detail validation rules.
 func ValidateUserWorkspaceJSON() gin.HandlerFunc {
-	var jsonObj entity.Workspace
+	var jsonObj entity.UserWorkspace
 	return validateJSON(jsonObj)
 }
 

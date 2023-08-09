@@ -14,7 +14,7 @@ type AccountController struct{}
 func (receiver *AccountController) Register(routerGroup *gin.RouterGroup) {
 	accountGroup := routerGroup.Group("/user")
 	{
-		// GET "/user" -- service.Login
+		// GET "/user"
 		accountGroup.GET(
 			"",
 			middleware.ValidateLoginJSON(),
@@ -28,7 +28,7 @@ func (receiver *AccountController) Register(routerGroup *gin.RouterGroup) {
 					context.JSON(http.StatusUnauthorized, resp)
 				}
 			})
-		// POST "/user" -- service.Register
+		// POST "/user"
 		accountGroup.POST(
 			"",
 			middleware.ValidateRegisterJSON(),
@@ -40,7 +40,7 @@ func (receiver *AccountController) Register(routerGroup *gin.RouterGroup) {
 					context.JSON(http.StatusUnprocessableEntity, resp)
 				}
 			})
-		// PUT "/user" -- service.UpdateUser
+		// PUT "/user"
 		accountGroup.PUT(
 			"",
 			middleware.JWTAuth(),
@@ -49,6 +49,20 @@ func (receiver *AccountController) Register(routerGroup *gin.RouterGroup) {
 			func(context *gin.Context) {
 				jsonObj := context.MustGet("jsonObj").(entity.User)
 				if resp := service.UpdateUser(jsonObj); resp.Success() {
+					context.JSON(http.StatusOK, resp)
+				} else {
+					context.JSON(http.StatusUnprocessableEntity, resp)
+				}
+			})
+		// POST "/user/workspace"
+		accountGroup.POST(
+			"/workspace",
+			middleware.JWTAuth(),
+			middleware.ValidateUserWorkspaceJSON(),
+			middleware.JWTInterceptor(),
+			func(context *gin.Context) {
+				jsonObj := context.MustGet("jsonObj").(entity.UserWorkspace)
+				if resp := service.JoinWorkspace(jsonObj); resp.Success() {
 					context.JSON(http.StatusOK, resp)
 				} else {
 					context.JSON(http.StatusUnprocessableEntity, resp)
