@@ -3,7 +3,7 @@ package service
 import (
 	"github.com/KingFarGrace/CollabSearch/server/entity"
 	"github.com/KingFarGrace/CollabSearch/server/mapper"
-	response "github.com/KingFarGrace/CollabSearch/server/router/response"
+	"github.com/KingFarGrace/CollabSearch/server/response"
 	"github.com/KingFarGrace/CollabSearch/server/util"
 )
 

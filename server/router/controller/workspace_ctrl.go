@@ -10,8 +10,8 @@ import (
 
 type WorkspaceController struct{}
 
-func (receiver WorkspaceController) Register(router *gin.RouterGroup) {
-	workspaceGroup := router.Group("/workspace")
+func (receiver WorkspaceController) Register(routerGroup *gin.RouterGroup) {
+	workspaceGroup := routerGroup.Group("/workspace")
 	workspaceGroup.Use(middleware.JWTAuth())
 	{
 		// POST "/workspace"

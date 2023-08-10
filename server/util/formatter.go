@@ -10,6 +10,9 @@ import (
 // Encapsulate the functionality of strings.Builder.
 // Allow string, bool and int input.
 func Concat(strs ...interface{}) string {
+	if len(strs) == 0 {
+		return ""
+	}
 	var builder strings.Builder
 	defer builder.Reset()
 	for i := 0; i < len(strs); i++ {
@@ -29,6 +32,25 @@ func Concat(strs ...interface{}) string {
 		if value, ok := str.(int); ok {
 			builder.WriteString(strconv.Itoa(value))
 			continue
+		}
+	}
+	return builder.String()
+}
+
+// GetCompositeKey return a Redis composite key such as "part1:part2:part3:..."
+func GetCompositeKey(parts ...string) string {
+	if len(parts) == 0 {
+		return ""
+	}
+	if len(parts) == 1 {
+		return parts[0]
+	}
+	var builder strings.Builder
+	defer builder.Reset()
+	for idx, part := range parts {
+		builder.WriteString(part)
+		if idx+1 < len(parts) {
+			builder.WriteString(":")
 		}
 	}
 	return builder.String()

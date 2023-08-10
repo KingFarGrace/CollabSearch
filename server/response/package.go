@@ -1,4 +1,4 @@
-package router
+package response
 
 import (
 	"github.com/KingFarGrace/CollabSearch/server/util"
@@ -41,3 +41,5 @@ func (receiver *Response) Success() bool {
 
 const AccountGroupCode = 1
 const WorkspaceGroupCode = 2
+const ResultGroupCode = 3
+const NoteGroupCode = 4

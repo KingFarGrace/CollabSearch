@@ -17,6 +17,8 @@ func InitRouter() *gin.Engine {
 		controllers.IndexController.Register(routerGroup)
 		controllers.AccountController.Register(routerGroup)
 		controllers.WorkspaceController.Register(routerGroup)
+		controllers.ResultController.Register(routerGroup)
+		controllers.NoteController.Register(routerGroup)
 	}
 	return router
 }

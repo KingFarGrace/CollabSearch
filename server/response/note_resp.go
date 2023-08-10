@@ -1,18 +1,18 @@
-package router
+package response
 
 import (
 	"github.com/KingFarGrace/CollabSearch/server/entity"
 	"github.com/KingFarGrace/CollabSearch/server/util"
 )
 
-type AccountResponse struct {
+type NoteResponse struct {
 	Response
-	Users []entity.User
+	Notes []entity.Note
 }
 
-func (receiver *AccountResponse) SetReturnObjs(objs interface{}) {
-	if users, ok := objs.([]entity.User); ok {
-		receiver.Users = users
+func (receiver *NoteResponse) SetReturnObjs(objs interface{}) {
+	if notes, ok := objs.([]entity.Note); ok {
+		receiver.Notes = notes
 	} else {
 		util.WarnLogger("SetReturnObjs()", "Failed to set return objs.")
 	}

@@ -53,14 +53,8 @@ func ValidateUserWorkspaceJSON() gin.HandlerFunc {
 // validateJSON
 // An encapsulation of different middleware func.
 // Pass verified json obj or abort with return code http.StatusBadRequest.
-// jsonObj <T> should only be entities in package entity.
-func validateJSON[
-	T entity.RegisterJSON |
-		entity.LoginJSON |
-		entity.User |
-		entity.Workspace |
-		entity.UserWorkspace |
-		entity.UidJSON](jsonObj T) gin.HandlerFunc {
+// jsonObj <T> must be defined in interface entity.Serializable.
+func validateJSON[T entity.Serializable](jsonObj T) gin.HandlerFunc {
 	return func(context *gin.Context) {
 		if err := context.ShouldBindBodyWith(&jsonObj, binding.JSON); err != nil {
 			fmt.Printf("%v", jsonObj)
@@ -78,13 +72,7 @@ func validateJSON[
 
 // valid is an encapsulation of validate process.
 // Return errMsg if failed to validated json data, otherwise return ok (empty string).
-func valid[
-	T entity.RegisterJSON |
-		entity.LoginJSON |
-		entity.User |
-		entity.Workspace |
-		entity.UserWorkspace |
-		entity.UidJSON](jsonObj T) string {
+func valid[T entity.Serializable](jsonObj T) string {
 	validate := validator.New()
 	ok := ""
 	err := validate.Struct(jsonObj)
