@@ -12,13 +12,19 @@ var controllers = ctrl.Controllers
 func InitRouter() *gin.Engine {
 	router := gin.New()
 	router.Use(middleware.InitCors())
-	routerGroup := router.Group("")
+	indexGroup := router.Group("/")
 	{
-		controllers.IndexController.Register(routerGroup)
-		controllers.AccountController.Register(routerGroup)
-		controllers.WorkspaceController.Register(routerGroup)
-		controllers.ResultController.Register(routerGroup)
-		controllers.NoteController.Register(routerGroup)
+		controllers.IndexController.Register(indexGroup)
+	}
+	accountGroup := router.Group("/user")
+	{
+		controllers.AccountController.Register(accountGroup)
+	}
+	workspaceGroup := router.Group("/workspace")
+	{
+		controllers.WorkspaceController.Register(workspaceGroup)
+		controllers.ResultController.Register(workspaceGroup)
+		controllers.NoteController.Register(workspaceGroup)
 	}
 	return router
 }
