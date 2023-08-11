@@ -38,17 +38,23 @@ func Concat(strs ...interface{}) string {
 }
 
 // GetCompositeKey return a Redis composite key such as "part1:part2:part3:..."
-func GetCompositeKey(parts ...string) string {
+func GetCompositeKey(parts ...interface{}) string {
 	if len(parts) == 0 {
 		return ""
-	}
-	if len(parts) == 1 {
-		return parts[0]
 	}
 	var builder strings.Builder
 	defer builder.Reset()
 	for idx, part := range parts {
-		builder.WriteString(part)
+		switch value := part.(type) {
+		case string:
+			builder.WriteString(value)
+		case int:
+			builder.WriteString(strconv.Itoa(value))
+		case int64:
+			builder.WriteString(strconv.FormatInt(value, 10))
+		default:
+			WarnLogger("GetCompositeKey()", "Failed to build key.")
+		}
 		if idx+1 < len(parts) {
 			builder.WriteString(":")
 		}
@@ -70,4 +76,16 @@ func String2Int64(str string) (int64, bool) {
 		return i, false
 	}
 	return i, true
+}
+
+func String2Int64Arr(strs []string) []int64 {
+	iArr := make([]int64, 0)
+	for _, str := range strs {
+		if i, success := String2Int64(str); success {
+			iArr = append(iArr, i)
+		} else {
+			return nil
+		}
+	}
+	return iArr
 }

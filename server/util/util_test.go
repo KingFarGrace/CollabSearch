@@ -61,3 +61,7 @@ func TestJWT(t *testing.T) {
 	//salt := base64.URLEncoding.EncodeToString(key)[:64]
 	//fmt.Println(salt)
 }
+
+func TestGetCompositeKey(t *testing.T) {
+	fmt.Printf("%s", GetCompositeKey("uid", 1, "wid", 1))
+}

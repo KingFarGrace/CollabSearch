@@ -52,3 +52,51 @@ func TestSelectWorkspacesByUid(t *testing.T) {
 	workspaces := SelectWorkspacesByUid(1688259015886245888)
 	fmt.Println(workspaces)
 }
+
+func TestSetResult(t *testing.T) {
+	conf.InitCachingLayer()
+	result := entity.Result{
+		Uid:    1,
+		Wid:    1,
+		Title:  "wtf",
+		URL:    "http://localhost.com",
+		Phrase: "wtf",
+	}
+	if !SetHistory(result) {
+		t.Errorf("Failed")
+	}
+}
+
+func TestSetNX(t *testing.T) {
+	conf.InitCachingLayer()
+	client := getClient()
+	ctx, cancel := getDefaultContext()
+	defer cancel()
+	result, err := client.SetNX(ctx, "test", "yes", 0).Result()
+	if err != nil {
+		t.Errorf("result: %v err: %v", result, err)
+	}
+}
+
+func TestSetHistory(t *testing.T) {
+	conf.InitCachingLayer()
+	result := entity.Result{
+		Uid:    1,
+		Wid:    1,
+		Title:  "wtf2",
+		URL:    "http://localhost.com",
+		Phrase: "wtf2",
+	}
+	if !SetHistory(result) {
+		t.Errorf("Failed.")
+	}
+}
+
+func TestGetHistoriesByResultKey(t *testing.T) {
+	conf.InitCachingLayer()
+	if histories := GetHistoriesByResultKey(1, 1); histories == nil {
+		t.Errorf("Failed: histories is nil.")
+	} else {
+		fmt.Println(histories)
+	}
+}
