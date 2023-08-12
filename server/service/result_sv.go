@@ -17,6 +17,14 @@ func SetSearchingHistory(result entity.Result) *response.ResultResponse {
 	return getFailedResultResp(1, "Failed to set searching history.")
 }
 
+func GetSearchingHistories(wid int) *response.ResultResponse {
+	histories := mapper.GetHistoriesByResultKey(0, wid)
+	if histories == nil {
+		return getFailedResultResp(4, "Failed to get searching histories.")
+	}
+	return getSuccessResultResp(histories...)
+}
+
 // GetUserSearchingHistories can get searching histories of specific user in the workspace.
 func GetUserSearchingHistories(uw entity.UserWorkspace) *response.ResultResponse {
 	histories := mapper.GetHistoriesByResultKey(uw.Uid, uw.Wid)

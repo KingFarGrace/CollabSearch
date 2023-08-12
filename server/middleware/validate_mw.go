@@ -50,6 +50,20 @@ func ValidateUserWorkspaceJSON() gin.HandlerFunc {
 	return validateJSON(jsonObj)
 }
 
+// ValidateResultJSON is a middleware to validate user_workspace data.
+// @See entity.Result for detail validation rules.
+func ValidateResultJSON() gin.HandlerFunc {
+	var jsonObj entity.Result
+	return validateJSON(jsonObj)
+}
+
+// ValidateSearchingJSON is a middleware to validate user_workspace data.
+// @See entity.SearchingJSON for detail validation rules.
+func ValidateSearchingJSON() gin.HandlerFunc {
+	var jsonObj entity.SearchingJSON
+	return validateJSON(jsonObj)
+}
+
 // validateJSON
 // An encapsulation of different middleware func.
 // Pass verified json obj or abort with return code http.StatusBadRequest.
