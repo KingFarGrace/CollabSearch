@@ -7,11 +7,11 @@ import (
 
 type ResultResponse struct {
 	Response
-	Results []entity.Result
+	Results []entity.SearchingHistory
 }
 
 func (receiver *ResultResponse) SetReturnObjs(objs interface{}) {
-	if results, ok := objs.([]entity.Result); ok {
+	if results, ok := objs.([]entity.SearchingHistory); ok {
 		receiver.Results = results
 	} else {
 		util.WarnLogger("SetReturnObjs()", "Failed to set return objs.")

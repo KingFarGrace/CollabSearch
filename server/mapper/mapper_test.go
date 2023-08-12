@@ -81,11 +81,11 @@ func TestSetNX(t *testing.T) {
 func TestSetHistory(t *testing.T) {
 	conf.InitCachingLayer()
 	result := entity.Result{
-		Uid:    1,
+		Uid:    3,
 		Wid:    1,
-		Title:  "wtf2",
+		Title:  "wtf3",
 		URL:    "http://localhost.com",
-		Phrase: "wtf2",
+		Phrase: "wtf3",
 	}
 	if !SetHistory(result) {
 		t.Errorf("Failed.")
@@ -94,9 +94,14 @@ func TestSetHistory(t *testing.T) {
 
 func TestGetHistoriesByResultKey(t *testing.T) {
 	conf.InitCachingLayer()
-	if histories := GetHistoriesByResultKey(1, 1); histories == nil {
+	if histories := GetHistoriesByResultKey(0, 1); histories == nil {
 		t.Errorf("Failed: histories is nil.")
 	} else {
 		fmt.Println(histories)
 	}
+}
+
+func TestGetLatestRIDByWid(t *testing.T) {
+	conf.InitCachingLayer()
+	fmt.Println(GetLatestRIDByWid(1))
 }

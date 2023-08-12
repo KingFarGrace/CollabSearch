@@ -37,6 +37,16 @@ func Concat(strs ...interface{}) string {
 	return builder.String()
 }
 
+func RemovePunctuation(str string) string {
+	var result strings.Builder
+	for _, char := range str {
+		if !strings.ContainsRune(".,!?;:", char) {
+			result.WriteRune(char)
+		}
+	}
+	return result.String()
+}
+
 // GetCompositeKey return a Redis composite key such as "part1:part2:part3:..."
 func GetCompositeKey(parts ...interface{}) string {
 	if len(parts) == 0 {

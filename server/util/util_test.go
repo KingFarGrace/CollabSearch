@@ -65,3 +65,7 @@ func TestJWT(t *testing.T) {
 func TestGetCompositeKey(t *testing.T) {
 	fmt.Printf("%s", GetCompositeKey("uid", 1, "wid", 1))
 }
+
+func TestRemovePunctuation(t *testing.T) {
+	fmt.Printf(RemovePunctuation("test, this. string? yes!"))
+}
