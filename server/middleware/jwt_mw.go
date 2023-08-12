@@ -2,7 +2,9 @@ package middleware
 
 import (
 	"github.com/KingFarGrace/CollabSearch/server/conf"
+	"github.com/KingFarGrace/CollabSearch/server/entity"
 	"github.com/KingFarGrace/CollabSearch/server/util"
+	"github.com/bytedance/sonic"
 	"github.com/gin-gonic/gin"
 	"net/http"
 )
@@ -20,11 +22,20 @@ func JWTAuth() gin.HandlerFunc {
 			return
 		}
 		jwt = jwt[len(prefix):]
-		if token := util.JWTValidate(jwt, conf.Salt); token == nil {
+		token := util.JWTValidate(jwt, conf.Salt)
+		if token == nil {
 			context.Set("jwtAuth", false)
 			context.Next()
 			return
 		}
+		claims := entity.TokenClaims{}
+		err := sonic.Unmarshal(token.Claims(), &claims)
+		if err != nil {
+			context.Set("jwtAuth", false)
+			context.Next()
+			return
+		}
+		context.Set("claims", claims)
 		context.Set("jwtAuth", true)
 		context.Next()
 	}

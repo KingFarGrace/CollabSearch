@@ -11,6 +11,8 @@ type controllers struct {
 	IndexController
 	AccountController
 	WorkspaceController
+	ResultController
+	NoteController
 }
 
 var Controllers = new(controllers)

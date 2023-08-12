@@ -1,4 +1,4 @@
-package router
+package response
 
 import (
 	"github.com/KingFarGrace/CollabSearch/server/entity"

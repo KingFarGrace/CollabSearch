@@ -4,7 +4,7 @@ import (
 	"github.com/KingFarGrace/CollabSearch/server/conf"
 	"github.com/KingFarGrace/CollabSearch/server/entity"
 	"github.com/KingFarGrace/CollabSearch/server/mapper"
-	response "github.com/KingFarGrace/CollabSearch/server/router/response"
+	"github.com/KingFarGrace/CollabSearch/server/response"
 	"github.com/KingFarGrace/CollabSearch/server/util"
 	"strings"
 )
@@ -36,6 +36,20 @@ func Register(registerJSON entity.RegisterJSON) *response.AccountResponse {
 	}
 }
 
+// CheckStatus should always be called before LoginWithoutToken.
+// If user has valid token, then success and return user data.
+func CheckStatus(claims entity.TokenClaims) *response.AccountResponse {
+	if claims.Email == "" {
+		return getFailedAccountResp(4, "No such user. Email: ")
+	}
+	user := mapper.SelectUserByEmail(claims.Email)
+	if user == nil {
+		errMsg := util.Concat("No such user. Email: ", claims.Email)
+		return getFailedAccountResp(4, errMsg)
+	}
+	return getSuccessAccountResp(*user)
+}
+
 // LoginWithoutToken is a function for no-token user to login.
 // no-token user: new user or whose token was expired.
 // When someone sign in the system through this function,
@@ -54,6 +68,7 @@ func LoginWithoutToken(loginJSON entity.LoginJSON) (*response.AccountResponse, s
 	return getSuccessAccountResp(*user), token.String()
 }
 
+// UpdateUser to update user data.
 func UpdateUser(user entity.User) *response.AccountResponse {
 	if mapper.UpdateUser(user) {
 		return getSuccessAccountResp()
@@ -77,6 +92,7 @@ func getFailedAccountResp(failureIdx int, failureMsg string) *response.AccountRe
 	return resp
 }
 
+// passAuth: password authentication.
 func passAuth(pwdInput, pwd string) bool {
 	if pwdInput != pwd {
 		return false
