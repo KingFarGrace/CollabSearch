@@ -46,18 +46,10 @@ func GetSearchingAdvice(search entity.SearchingJSON) *response.ResultResponse {
 	keyPhrase := util.RemovePunctuation(search.Phrase)
 	// build positive lookahead regex pattern like:
 	// (?=.*\bkey1\b)(?=.*\bkey2\b)...(?=.*\bkeyn\b).*
-	var pattern string
-	for _, key := range strings.Split(keyPhrase, " ") {
-		pattern = util.Concat(pattern, "(?=.*\\b", key, "\\b)")
-	}
-	pattern = util.Concat(pattern, ".*")
-	regex, err := regexp.Compile(pattern)
-	if err != nil {
-		return getFailedResultResp(2, "Failed to parse key phrase.")
-	}
+	keywords := strings.Split(keyPhrase, " ")
 	matchedHistories := make([]entity.SearchingHistory, 0)
 	for _, history := range histories {
-		if regex.MatchString(history.Phrase) {
+		if containsAll(history.Phrase, keywords) {
 			matchedHistories = append(matchedHistories, history)
 		}
 	}
@@ -88,4 +80,14 @@ func getFailedResultResp(failureIdx int, failureMsg string) *response.ResultResp
 	resp := new(response.ResultResponse)
 	resp.New(response.ResultGroupCode, failureIdx, failureMsg)
 	return resp
+}
+
+func containsAll(str string, subStrings []string) bool {
+	for _, sub := range subStrings {
+		re := regexp.MustCompile(regexp.QuoteMeta(sub))
+		if !re.MatchString(str) {
+			return false
+		}
+	}
+	return true
 }
