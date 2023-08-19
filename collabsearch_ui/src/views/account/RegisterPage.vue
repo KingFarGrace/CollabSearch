@@ -40,11 +40,14 @@ function sumbitRegisterForm() {
 </script>
 
 <template>
-  <v-card width="400">
-    <v-card-item>
-      <v-card-title>Register</v-card-title>
-    </v-card-item>
-    <v-sheet width="300" class="mx-auto">
+  <v-card width="600">
+    <v-card-title class="text-h4 text-center" min-height="100"
+      >Register</v-card-title
+    >
+    <br />
+    <v-divider></v-divider>
+    <br />
+    <v-sheet width="400" class="mx-auto">
       <v-form fast-fail @submit.prevent>
         <v-text-field
           v-model="email"
@@ -69,11 +72,10 @@ function sumbitRegisterForm() {
           type="password"
         ></v-text-field>
         <v-btn type="submit" block class="mt-2" @click="sumbitRegisterForm"
-          >Submit</v-btn
+          >Register</v-btn
         >
       </v-form>
     </v-sheet>
-
-    <v-card-text></v-card-text>
+    <br />
   </v-card>
 </template>

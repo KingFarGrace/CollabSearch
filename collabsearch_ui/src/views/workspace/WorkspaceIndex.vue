@@ -20,14 +20,22 @@ function goCreateWorkspace() {
 </script>
 
 <template>
-  <v-card>
-    <v-tabs v-model="tab" align-tabs="center" color="deep-purple-accent-4">
-      <v-tab value="1" @click="getWorkspacesJoined">Workspaces I joined</v-tab>
-      <v-tab value="2" @click="getWorkspacesCreated"
-        >Workspaces I created</v-tab
-      >
-      <v-tab value="3" @click="goCreateWorkspace">Create a workspace</v-tab>
-    </v-tabs>
-    <v-card><router-view></router-view></v-card>
-  </v-card>
+  <v-container>
+    <v-row
+      ><v-card class="float-left">
+        <v-tabs v-model="tab" align-tabs="center" color="deep-purple-accent-4">
+          <v-tab value="1" @click="getWorkspacesJoined"
+            >Workspaces I joined</v-tab
+          >
+          <v-tab value="2" @click="getWorkspacesCreated"
+            >Workspaces I created</v-tab
+          >
+          <v-tab value="3" @click="goCreateWorkspace">Create a workspace</v-tab>
+        </v-tabs>
+      </v-card></v-row
+    >
+    <v-row>
+      <v-card class="w-100"><router-view></router-view></v-card>
+    </v-row>
+  </v-container>
 </template>

@@ -24,11 +24,14 @@ function submitLoginForm() {
 </script>
 
 <template>
-  <v-card width="400">
-    <v-card-item>
-      <v-card-title>Login</v-card-title>
-    </v-card-item>
-    <v-sheet width="300" class="mx-auto">
+  <v-card width="600">
+    <v-card-title class="text-h4 text-center" min-height="100"
+      >Login</v-card-title
+    >
+    <br />
+    <v-divider></v-divider>
+    <br />
+    <v-sheet width="400" class="mx-auto">
       <v-form fast-fail @submit.prevent>
         <v-text-field
           v-model="email"
@@ -44,13 +47,18 @@ function submitLoginForm() {
         ></v-text-field>
 
         <v-btn type="submit" block class="mt-2" @click="submitLoginForm"
-          >Submit</v-btn
+          >Login</v-btn
         >
       </v-form>
     </v-sheet>
     <br />
     <v-divider inset></v-divider>
-    New user? <router-link to="/reg">Click to create your accout.</router-link>
-    <v-card-text></v-card-text>
+    <br />
+    <span class="float right"
+      >New user?
+      <router-link to="/reg">Click to create your accout.</router-link></span
+    >
+    <br />
+    <br />
   </v-card>
 </template>

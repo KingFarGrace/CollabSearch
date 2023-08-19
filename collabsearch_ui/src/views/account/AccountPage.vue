@@ -2,9 +2,11 @@
 import { ref } from 'vue'
 import { storeToRefs } from 'pinia'
 import { useAccountStore } from '@/stores/account'
+import { useRouter } from 'vue-router'
 const store = useAccountStore()
 var { uid, username, email, profile, avatar } = storeToRefs(store)
 var logout = store.logout
+var router = useRouter()
 var disabled = ref(true)
 var dialog = ref(false)
 var rules = [
@@ -24,25 +26,32 @@ function updateInfo() {
 function updateAvatar() {
   dialog.value = false
 }
+function logoutToAuthPage() {
+  logout()
+  router.push('/login')
+}
 </script>
 
 <template>
-  <v-sheet width="300" class="mx-auto">
-    <v-form>
-      <div>
+  <v-card width="500" height="auto"
+    ><v-sheet width="300" class="mx-auto">
+      <v-form>
         <v-avatar size="90" @click="dialog = true">
           <v-img alt="Avatar" :src="avatar"></v-img>
         </v-avatar>
-        <v-dialog v-model="dialog" width="480px">
+        <br />
+        <v-dialog v-model="dialog" width="1000" height="500">
           <v-card>
-            <v-file-input
-              :rules="rules"
-              show-size
-              accept="image/png, image/jpeg, image/bmp"
-              placeholder="Pick an avatar"
-              prepend-icon="mdi-camera"
-              label="Avatar"
-            ></v-file-input>
+            <span class="mx-auto w-75"
+              ><v-file-input
+                :rules="rules"
+                show-size
+                accept="image/png, image/jpeg, image/bmp"
+                placeholder="Pick an avatar"
+                prepend-icon="mdi-camera"
+                label="Avatar"
+              ></v-file-input
+            ></span>
 
             <v-card-actions>
               <v-btn color="primary" block @click="updateAvatar"
@@ -51,31 +60,39 @@ function updateAvatar() {
             </v-card-actions>
           </v-card>
         </v-dialog>
-      </div>
 
-      <v-text-field
-        v-model="uid"
-        label="User ID"
-        disabled="true"
-      ></v-text-field>
-      <v-text-field
-        v-model="email"
-        label="Email"
-        disabled="true"
-      ></v-text-field>
-      <v-text-field
-        v-model="username"
-        label="Username"
-        :disabled="disabled"
-      ></v-text-field>
-      <v-text-field
-        v-model="profile"
-        label="Profile"
-        :disabled="disabled"
-      ></v-text-field>
-      <v-btn @click="updateInfo"> Update account </v-btn>
-    </v-form>
-    <br />
-    <v-btn color="error" @click="logout">Log out</v-btn>
-  </v-sheet>
+        <v-text-field
+          v-model="uid"
+          label="User ID"
+          disabled="true"
+        ></v-text-field>
+        <v-text-field
+          v-model="email"
+          label="Email"
+          disabled="true"
+        ></v-text-field>
+        <v-text-field
+          v-model="username"
+          label="Username"
+          :disabled="disabled"
+        ></v-text-field>
+        <v-text-field
+          v-model="profile"
+          label="Profile"
+          :disabled="disabled"
+        ></v-text-field>
+        <v-btn class="mt-2 mx-auto w-50" @click="updateInfo" v-if="disabled">
+          Update
+        </v-btn>
+        <v-btn class="mt-2 mx-auto w-50" @click="updateInfo" v-if="!disabled">
+          Finish
+        </v-btn>
+      </v-form>
+      <br />
+      <v-divider></v-divider>
+      <v-btn color="error" class="mt-2 mx-auto w-50" @click="logoutToAuthPage"
+        >Log out</v-btn
+      > </v-sheet
+    ><br
+  /></v-card>
 </template>

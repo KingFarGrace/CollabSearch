@@ -33,17 +33,21 @@ function submitWorkspaceForm() {
 </script>
 
 <template>
-  <v-card width="400">
+  <v-card class="mx-auto w-100">
     <v-card-item>
-      <v-card-title>Create a workspace</v-card-title>
+      <v-card-title class="text-h5 text-center"
+        >Create a workspace</v-card-title
+      >
     </v-card-item>
-    <v-sheet width="300" class="mx-auto">
+    <v-divider></v-divider>
+    <v-sheet class="mx-auto w-75">
       <v-form fast-fail @submit.prevent>
         <v-text-field
           counter
           v-model="title"
           label="Title"
           :rules="titleRules"
+          class="mx-auto w-75"
         ></v-text-field>
 
         <v-container fluid width="300">
@@ -54,13 +58,23 @@ function submitWorkspaceForm() {
             label="Description"
             :rules="descriptionRules"
             :model-value="description"
+            class="w-100"
           ></v-textarea>
         </v-container>
-
+        <input
+          class="float-middle"
+          type="datetime-local"
+          id="datetime"
+          name="datetime"
+          v-if="false"
+        />
+        <!-- TODO: Datetime picker here. -->
         <v-text-field
           v-model="due"
           label="Due"
           :rules="dueRules"
+          class="mx-auto w-50"
+          v-if="true"
         ></v-text-field>
         <v-btn type="submit" block class="mt-2" @click="submitWorkspaceForm"
           >Submit</v-btn

@@ -1,5 +1,6 @@
 <script setup>
 import { useRouter } from 'vue-router'
+import { VContainer } from 'vuetify/lib/components/index.mjs'
 var router = useRouter()
 function goAuthPage() {
   router.push('/login')
@@ -9,6 +10,12 @@ function goAccountPage() {
 }
 function goWorkspacePage() {
   router.push('/workspace')
+}
+function goWorkspaceHandlerPage() {
+  router.push('/workspace/handler')
+}
+function goWorkspaceCreatorPage() {
+  router.push('/workspace/create')
 }
 </script>
 
@@ -24,7 +31,7 @@ function goWorkspacePage() {
           v-if="true"
         ></v-list-item>
         <v-list-item
-          prepend-avatar="src\\assets\\OIP.jpg"
+          prepend-avatar="src/assets/OIP.jpg"
           title="Login"
           @click="goAuthPage"
           v-if="false"
@@ -32,30 +39,32 @@ function goWorkspacePage() {
         </v-list-item>
       </v-list>
       <v-divider></v-divider>
-
-      <v-list density="compact" nav>
+      <v-list nav>
         <v-list-item
-          prepend-icon="mdi-account-multiple"
-          title="My Workspaces"
-          value="myWorkspaces"
+          prepend-icon="mdi-briefcase"
+          title="Workspace I Joined"
           @click="goWorkspacePage"
         ></v-list-item>
         <v-list-item
-          prepend-icon="mdi-star"
-          title="Starred"
-          value="starred"
+          prepend-icon="mdi-briefcase-outline"
+          title="Workspace I Created"
+          @click="goWorkspaceHandlerPage"
+        ></v-list-item>
+        <v-list-item
+          prepend-icon="mdi-folder-plus-outline"
+          title="Workspace Creator"
+          @click="goWorkspaceCreatorPage"
         ></v-list-item>
       </v-list>
     </v-navigation-drawer>
-
-    <v-app-bar title="Application bar"></v-app-bar>
-
-    <v-main
-      class="d-flex align-center justify-center"
-      style="min-height: 300px"
-    >
-      <router-view></router-view>
-    </v-main>
+    <v-container>
+      <v-main
+        class="d-flex align-center justify-center"
+        style="min-height: 300px"
+      >
+        <router-view></router-view>
+      </v-main>
+    </v-container>
   </v-layout>
 </template>
 
