@@ -4,7 +4,9 @@ import { ref } from 'vue'
 // import { useUWStore } from '@/stores/userWorkspace'
 // var { getCreatedWorkspaceByWid } = useUWStore()
 // var workspace = getCreatedWorkspaceByWid()
-var title = ref('')
+import VueDatePicker from '@vuepic/vue-datepicker'
+import '@vuepic/vue-datepicker/dist/main.css'
+var topic = ref('')
 var description = ref('')
 var due = ref('')
 var disabled = ref(true)
@@ -26,18 +28,22 @@ var descriptionRules = [
   }
 ]
 
-var dueRules = [
-  (value) => {
-    const reg =
-      /^\d{4}-((0[1-9]|1[0-2])-(0[1-9]|1\d|2[0-8])|(0[13-9]|1[0-2])-(29|30)|(0[13578]|1[02])-31) (00|0\d|1\d|2[0-3]):[0-5]\d:[0-5]\d$/
-
-    if (reg.test(value)) return true
-    return "Datetime format must be valid and its format should be like '2000-12-31 00:00:00'."
-  }
-]
-
 function updateWorkspaceForm() {
   disabled.value = !disabled.value
+}
+
+function printDatetime() {
+  const date = new Date(due.value)
+
+  const day = String(date.getDate()).padStart(2, '0')
+  const month = String(date.getMonth() + 1).padStart(2, '0') // +1 because months are 0-indexed
+  const year = date.getFullYear()
+
+  const hours = String(date.getHours()).padStart(2, '0')
+  const minutes = String(date.getMinutes()).padStart(2, '0')
+  const seconds = String(date.getSeconds()).padStart(2, '0')
+
+  console.log(`${day}-${month}-${year} ${hours}:${minutes}:${seconds}`)
 }
 
 function searchUserByEmail() {
@@ -49,7 +55,7 @@ function searchUserByEmail() {
 </script>
 
 <template>
-  <v-card class="mx-auto w-100">
+  <v-card class="mx-auto w-100 overflow-visible" density="comfortable">
     <v-card-item>
       <v-card-title class="text-h5 text-center"
         >Create a workspace</v-card-title
@@ -60,8 +66,8 @@ function searchUserByEmail() {
       <v-form fast-fail @submit.prevent :disabled="disabled">
         <v-text-field
           counter
-          v-model="title"
-          label="Title"
+          v-model="topic"
+          label="Topic"
           :rules="titleRules"
           class="mx-auto w-75"
         ></v-text-field>
@@ -78,12 +84,13 @@ function searchUserByEmail() {
           ></v-textarea>
         </v-container>
 
-        <v-text-field
+        <VueDatePicker
           v-model="due"
-          label="Due"
-          :rules="dueRules"
-          class="mx-auto w-50"
-        ></v-text-field>
+          format="dd/MM/yyyy HH:mm:ss"
+          @update:model-value="printDatetime"
+          :disabled="disabled"
+          class="w-75 mx-auto"
+        ></VueDatePicker>
         <v-btn
           type="submit"
           class="mt-2 mx-auto w-50"

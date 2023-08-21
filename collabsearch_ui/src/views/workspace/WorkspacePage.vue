@@ -97,7 +97,7 @@ function search() {
   </v-container>
   <v-dialog v-model="infoDialog" class="w-auto">
     <v-card class="mx-auto w-75">
-      <v-card-title> Title here </v-card-title>
+      <v-card-title> Topic here </v-card-title>
       <v-card-subtitle>Due here</v-card-subtitle>
       <v-card-text>Description here</v-card-text>
       <v-card-actions>

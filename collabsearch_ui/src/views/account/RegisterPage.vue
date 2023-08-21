@@ -1,9 +1,17 @@
 <script setup>
 import { ref } from 'vue'
+import { accountRegisterService } from '@/api/account'
+import { success } from '@/utils/resp'
+import { useRouter } from 'vue-router'
+const router = useRouter()
 var email = ref('')
 var username = ref('')
 var password = ref('')
 var confirm = ref('')
+var valid = ref(false)
+var messager = ref(false)
+var timeout = ref(2000)
+var regMsg = ref('')
 var emailRules = [
   (value) => {
     const reg = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/
@@ -34,21 +42,44 @@ var confirmRules = [
   }
 ]
 
-function sumbitRegisterForm() {
-  alert('Register!')
+async function sumbitRegisterForm() {
+  if (!valid.value) return
+  try {
+    const data = await accountRegisterService(
+      email.value,
+      username.value,
+      password.value,
+      confirm.value
+    )
+    regMsg.value = data.Msg
+    messager.value = true
+    if (success(data)) {
+      successToAuth()
+    }
+  } catch (error) {
+    regMsg.value = error.Msg
+    messager.value = true
+  }
+}
+
+function successToAuth() {
+  router.push('/login')
 }
 </script>
 
 <template>
   <v-card width="600">
-    <v-card-title class="text-h4 text-center" min-height="100"
+    <v-card-title class="text-h4 text-center my-2" min-height="100"
       >Register</v-card-title
     >
-    <br />
     <v-divider></v-divider>
-    <br />
-    <v-sheet width="400" class="mx-auto">
-      <v-form fast-fail @submit.prevent>
+    <v-sheet width="400" class="mx-auto my-2">
+      <v-form
+        fast-fail
+        @submit.prevent
+        :model-value="valid"
+        @update:modelValue="valid = $event"
+      >
         <v-text-field
           v-model="email"
           label="Email"
@@ -71,11 +102,24 @@ function sumbitRegisterForm() {
           :rules="confirmRules"
           type="password"
         ></v-text-field>
-        <v-btn type="submit" block class="mt-2" @click="sumbitRegisterForm"
+        <v-btn
+          type="submit"
+          color="primary"
+          block
+          class="mt-2"
+          @click="sumbitRegisterForm"
           >Register</v-btn
         >
       </v-form>
     </v-sheet>
     <br />
   </v-card>
+  <v-snackbar v-model="messager" :timeout="timeout">
+    {{ regMsg }}
+    <template v-slot:actions>
+      <v-btn color="blue" variant="text" @click="messager = false">
+        Close
+      </v-btn>
+    </template>
+  </v-snackbar>
 </template>

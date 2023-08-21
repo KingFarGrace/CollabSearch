@@ -1,4 +1,5 @@
 import axios from 'axios'
+import { useAccountStore } from '@/stores/account'
 
 const instance = axios.create({
   baseURL: 'http://localhost:8080',
@@ -15,6 +16,10 @@ instance.defaults.headers.delete['Content-Type'] =
 instance.interceptors.request.use(
   function (config) {
     // Before sending request...
+    const store = useAccountStore()
+    if (store.token) {
+      config.headers.Authorization = 'Bearer ' + store.token
+    }
     return config
   },
   function (error) {
@@ -25,12 +30,32 @@ instance.interceptors.request.use(
 
 instance.interceptors.response.use(
   function (response) {
-    // Handled if http code = 2xx.
-    // Do something to response data.
-    return response
+    // Handled if http code = 2xx. Extract token from header.
+    const token = response.headers.authorization
+    if (token) {
+      const extractedToken = token.split(' ')[1]
+      if (extractedToken) {
+        const store = useAccountStore()
+        store.setToken(extractedToken)
+      }
+    }
+    // return response.data instead of response.
+    return response.data
   },
   function (error) {
     // Do something if response error.
+    // Only 3 types of status code.
+    // http.BadRequest: 400 -- JSON body validation failed.
+    // http.Unauthorized: 401 -- Token required.
+    // http.UnprocessedEntity: 422 -- Failed to process data for some reason.
+    var errMsg = error.response.data.Msg
+    if (error.response.status === 400) {
+      return Promise.reject({ Code: 400, Msg: errMsg })
+    } else if (error.response.status === 401) {
+      return Promise.reject({ Code: 401, Msg: errMsg })
+    } else if (error.response.status === 422) {
+      return Promise.reject({ Code: 422, Msg: errMsg })
+    }
     return Promise.reject(error)
   }
 )

@@ -1,7 +1,6 @@
 package middleware
 
 import (
-	"fmt"
 	"github.com/KingFarGrace/CollabSearch/server/entity"
 	"github.com/KingFarGrace/CollabSearch/server/util"
 	"github.com/gin-gonic/gin"
@@ -71,12 +70,12 @@ func ValidateSearchingJSON() gin.HandlerFunc {
 func validateJSON[T entity.Serializable](jsonObj T) gin.HandlerFunc {
 	return func(context *gin.Context) {
 		if err := context.ShouldBindBodyWith(&jsonObj, binding.JSON); err != nil {
-			fmt.Printf("%v", jsonObj)
-			context.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"msg": "Invalid request json.", "jsonObj": jsonObj})
+			util.ErrorLogger(err, "ShouldBindBodyWith()")
+			context.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"Msg": "Invalid request json.", "jsonObj": jsonObj})
 			return
 		}
 		if msg := valid(jsonObj); msg != "" {
-			context.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"msg": msg})
+			context.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"Msg": msg})
 			return
 		}
 		context.Set("jsonObj", jsonObj)

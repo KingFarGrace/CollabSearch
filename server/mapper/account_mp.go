@@ -57,13 +57,23 @@ func SelectUserByEmail(email string) *entity.User {
 	}
 }
 
+func SelectUserByEmailLike(key string) []entity.User {
+	engine := getEngine()
+	users := make([]entity.User, 0)
+	err := engine.Table("user").Where("name LIKE ?", key).Find(&users)
+	if err != nil {
+		return nil
+	}
+	return users
+}
+
 func SelectUsersByUsername(username string) []entity.User {
 	return nil
 }
 
 func UpdateUser(newData entity.User) bool {
 	engine := getEngine()
-	_, err := engine.ID(newData.Uid).Update(newData)
+	_, err := engine.ID(newData.Uid).Update(&newData)
 	if err != nil {
 		return false
 	}

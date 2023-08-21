@@ -2,13 +2,24 @@
 import { ref } from 'vue'
 import { storeToRefs } from 'pinia'
 import { useAccountStore } from '@/stores/account'
+import { convertBinaryToImageUrl } from '@/utils/file'
+import { accountUpdateService } from '@/api/account'
 import { useRouter } from 'vue-router'
 const store = useAccountStore()
+// Form
 var { uid, username, email, profile, avatar } = storeToRefs(store)
+var { setAvatar } = store
 var logout = store.logout
 var router = useRouter()
 var disabled = ref(true)
+var valid = ref(false)
+// Messager
+var messager = ref(false)
+var timeout = ref(2000)
+var updMsg = ref('')
+// Avatar upload dialog
 var dialog = ref(false)
+var loading = ref(false)
 var rules = [
   (value) => {
     return (
@@ -19,47 +30,81 @@ var rules = [
     )
   }
 ]
-function updateInfo() {
-  // TODO: PUT user info
+async function updateInfo() {
+  if (!valid.value) return
+  // Change update form status.
+  // When !disabled after changed, do nothing and return.
   disabled.value = !disabled.value
-}
-function updateAvatar() {
-  dialog.value = false
+  if (!disabled.value) {
+    return
+  }
+  try {
+    const data = await accountUpdateService(
+      uid.value,
+      '',
+      username.value,
+      profile.value,
+      ''
+    )
+    updMsg.value = data.Msg
+    messager.value = true
+  } catch (error) {
+    updMsg.value = error.Msg
+    messager.value = true
+  }
 }
 function logoutToAuthPage() {
   logout()
   router.push('/login')
+}
+function readAvatarFile(file) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader()
+
+    reader.onload = (event) => {
+      resolve(event.target.result)
+    }
+
+    reader.onerror = (error) => {
+      reject(error)
+    }
+
+    reader.readAsArrayBuffer(file)
+  })
+}
+// TODO: file save to back-end.
+async function updateAvatar(files) {
+  const content = await readAvatarFile(files[0])
+  setAvatar(convertBinaryToImageUrl(content))
+  try {
+    loading.value = true
+    const data = await accountUpdateService(uid.value, '', '', '', avatar.value)
+    loading.value = false
+    updMsg.value = data.Msg
+    messager.value = true
+  } catch (error) {
+    loading.value = false
+    updMsg.value = error.Msg
+    messager.value = true
+  } finally {
+    loading.value = false
+  }
 }
 </script>
 
 <template>
   <v-card width="500" height="auto"
     ><v-sheet width="300" class="mx-auto">
-      <v-form>
+      <v-form
+        fast-fail
+        @submit.prevent
+        :model-value="valid"
+        @update:modelValue="valid = $event"
+      >
         <v-avatar size="90" @click="dialog = true">
           <v-img alt="Avatar" :src="avatar"></v-img>
         </v-avatar>
         <br />
-        <v-dialog v-model="dialog" width="1000" height="500">
-          <v-card>
-            <span class="mx-auto w-75"
-              ><v-file-input
-                :rules="rules"
-                show-size
-                accept="image/png, image/jpeg, image/bmp"
-                placeholder="Pick an avatar"
-                prepend-icon="mdi-camera"
-                label="Avatar"
-              ></v-file-input
-            ></span>
-
-            <v-card-actions>
-              <v-btn color="primary" block @click="updateAvatar"
-                >Save and Close</v-btn
-              >
-            </v-card-actions>
-          </v-card>
-        </v-dialog>
 
         <v-text-field
           v-model="uid"
@@ -95,4 +140,34 @@ function logoutToAuthPage() {
       > </v-sheet
     ><br
   /></v-card>
+  <v-dialog v-model="dialog" width="1000" height="500">
+    <v-card>
+      <span class="mx-auto w-75"
+        ><v-file-input
+          :rules="rules"
+          :loading="loading"
+          show-size
+          accept="image/jpeg"
+          placeholder="Pick an avatar"
+          prepend-icon="mdi-camera"
+          label="Avatar"
+          @update:modelValue="updateAvatar"
+        ></v-file-input
+      ></span>
+
+      <v-card-actions>
+        <v-btn color="primary" block @click="dialog = false"
+          >Save and Close</v-btn
+        >
+      </v-card-actions>
+    </v-card>
+  </v-dialog>
+  <v-snackbar v-model="messager" :timeout="timeout">
+    {{ updMsg }}
+    <template v-slot:actions>
+      <v-btn color="blue" variant="text" @click="messager = false">
+        Close
+      </v-btn>
+    </template>
+  </v-snackbar>
 </template>

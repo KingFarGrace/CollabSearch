@@ -13,6 +13,12 @@ export const useAccountStore = defineStore(
       isLogin.value = true
     }
     const logout = () => {
+      setToken('')
+      setUid(0)
+      setEmail('')
+      setUsername('')
+      setProfile('')
+      setAvatar(defaultAvatarPath)
       isLogin.value = false
     }
     const uid = ref(0)
@@ -32,11 +38,30 @@ export const useAccountStore = defineStore(
       profile.value = newProfile
     }
     // Default avatar path
-    const avatar = ref('src/assets/OIP.jpg')
+    const defaultAvatarPath = 'src/assets/OIP.jpg'
+    const avatar = ref(defaultAvatarPath)
     const setAvatar = (newAvatar) => {
-      avatar.value = newAvatar
+      if (newAvatar) {
+        avatar.value = newAvatar
+      } else {
+        avatar.value = defaultAvatarPath
+      }
     }
-    const getUserInfo = async () => {}
+
+    const setAll = ({
+      uid: newUid,
+      email: newEmail,
+      username: newUsername,
+      profile: newProfile,
+      avatar: newAvatar
+    }) => {
+      setUid(newUid)
+      setEmail(newEmail)
+      setUsername(newUsername)
+      setProfile(newProfile)
+      setAvatar(newAvatar)
+      login()
+    }
 
     return {
       token,
@@ -53,8 +78,9 @@ export const useAccountStore = defineStore(
       profile,
       setProfile,
       avatar,
+      defaultAvatarPath,
       setAvatar,
-      getUserInfo
+      setAll
     }
   },
   { persist: true }

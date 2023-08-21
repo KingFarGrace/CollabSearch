@@ -76,6 +76,15 @@ func UpdateUser(user entity.User) *response.AccountResponse {
 	return getFailedAccountResp(5, "Failed to update user data.")
 }
 
+// SearchUser to get user whose email contains key.
+func SearchUser(key string) *response.AccountResponse {
+	users := mapper.SelectUserByEmailLike(key)
+	if users == nil {
+		return getFailedAccountResp(4, "No users found.")
+	}
+	return getSuccessAccountResp(users...)
+}
+
 func getSuccessAccountResp(users ...entity.User) *response.AccountResponse {
 	resp := new(response.AccountResponse)
 	resp.New(response.AccountGroupCode, 0, "Success.")

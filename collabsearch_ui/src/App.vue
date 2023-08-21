@@ -1,6 +1,11 @@
 <script setup>
 import { useRouter } from 'vue-router'
 import { VContainer } from 'vuetify/lib/components/index.mjs'
+import { useAccountStore } from '@/stores/account'
+import { storeToRefs } from 'pinia'
+var store = useAccountStore()
+var { isLogin, email, username, avatar } = storeToRefs(store)
+var defaultAvatar = store.defaultAvatarPath
 var router = useRouter()
 function goAuthPage() {
   router.push('/login')
@@ -24,17 +29,17 @@ function goWorkspaceCreatorPage() {
     <v-navigation-drawer expand-on-hover rail>
       <v-list>
         <v-list-item
-          prepend-avatar="https://randomuser.me/api/portraits/women/85.jpg"
-          title="Sandra Adams"
-          subtitle="sandra_a88@gmailcom"
+          :prepend-avatar="avatar"
+          :title="username"
+          :subtitle="email"
           @click="goAccountPage"
-          v-if="true"
+          v-if="isLogin"
         ></v-list-item>
         <v-list-item
-          prepend-avatar="src/assets/OIP.jpg"
+          :prepend-avatar="defaultAvatar"
           title="Login"
           @click="goAuthPage"
-          v-if="false"
+          v-if="!isLogin"
         >
         </v-list-item>
       </v-list>
@@ -58,10 +63,7 @@ function goWorkspaceCreatorPage() {
       </v-list>
     </v-navigation-drawer>
     <v-container>
-      <v-main
-        class="d-flex align-center justify-center"
-        style="min-height: 300px"
-      >
+      <v-main class="d-flex align-center justify-center mx-auto">
         <router-view></router-view>
       </v-main>
     </v-container>

@@ -1,4 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router'
+import { useAccountStore } from '@/stores/account'
+import { storeToRefs } from 'pinia'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -46,5 +48,15 @@ const router = createRouter({
     }
   ]
 })
+router.beforeEach((to, from, next) => {
+  const { isLogin } = storeToRefs(useAccountStore())
 
+  const isPublicRoute = to.path === '/login' || to.path === '/reg'
+
+  if (!isPublicRoute && !isLogin.value) {
+    return next('/login')
+  }
+
+  next()
+})
 export default router

@@ -69,6 +69,6 @@ func (receiver WorkspaceController) Register(routerGroup *gin.RouterGroup) {
 	routerGroup.GET(
 		"/:wid",
 		func(context *gin.Context) {
-			context.JSON(http.StatusOK, gin.H{"msg": "Enter a workspace!"})
+			context.JSON(http.StatusOK, gin.H{"Msg": "Enter a workspace!"})
 		})
 }

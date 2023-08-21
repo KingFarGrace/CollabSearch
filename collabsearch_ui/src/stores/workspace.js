@@ -19,7 +19,6 @@ export const useWorkspaceStore = defineStore('workspace', () => {
   const setDue = (content) => {
     due.value = content
   }
-  const getWorkspaceInfo = async () => {}
   return {
     wid,
     title,
@@ -29,7 +28,6 @@ export const useWorkspaceStore = defineStore('workspace', () => {
     handler,
     setHandler,
     due,
-    setDue,
-    getWorkspaceInfo
+    setDue
   }
 })

@@ -20,7 +20,7 @@ func (receiver *AccountController) Register(routerGroup *gin.RouterGroup) {
 		func(context *gin.Context) {
 			claims, exists := context.Get("claims")
 			if !exists {
-				context.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"msg": "Failed to get user claims."})
+				context.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"Msg": "Failed to get user claims."})
 				return
 			}
 			if resp := service.CheckStatus(claims.(entity.TokenClaims)); resp.Success() {
@@ -29,9 +29,9 @@ func (receiver *AccountController) Register(routerGroup *gin.RouterGroup) {
 				context.JSON(http.StatusUnauthorized, resp)
 			}
 		})
-	// GET "/user"
-	routerGroup.GET(
-		"",
+	// POST "/user/login"
+	routerGroup.POST(
+		"/login",
 		middleware.ValidateLoginJSON(),
 		func(context *gin.Context) {
 			jsonObj := context.MustGet("jsonObj").(entity.LoginJSON)

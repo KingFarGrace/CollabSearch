@@ -21,7 +21,7 @@ func (receiver *ResultController) Register(routerGroup *gin.RouterGroup) {
 			func(context *gin.Context) {
 				jsonObj, ok := context.MustGet("jsonObj").(entity.Result)
 				if !ok {
-					context.JSON(http.StatusBadRequest, gin.H{"msg": "Invalid request json."})
+					context.JSON(http.StatusBadRequest, gin.H{"Msg": "Invalid request json."})
 					return
 				}
 				if resp := service.SetSearchingHistory(jsonObj); resp.Success() {
