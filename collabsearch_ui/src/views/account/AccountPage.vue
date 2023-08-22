@@ -13,6 +13,18 @@ var logout = store.logout
 var router = useRouter()
 var disabled = ref(true)
 var valid = ref(false)
+var usernameRules = [
+  (value) => {
+    if (value?.length >= 1 && value?.length <= 16) return true
+    return 'Username should be at least 6 characters and no more than 16.'
+  }
+]
+var profileRules = [
+  (value) => {
+    if (value?.length > 0 && value?.length <= 255) return true
+    return 'Profile cannot be empty or longer than 255 characters.'
+  }
+]
 // Messager
 var messager = ref(false)
 var timeout = ref(2000)
@@ -72,7 +84,8 @@ function readAvatarFile(file) {
     reader.readAsArrayBuffer(file)
   })
 }
-// TODO: file save to back-end.
+// TODO: Optimse - store image in binary type, display it by url.
+// Now: store image and display it all by url.
 async function updateAvatar(files) {
   const content = await readAvatarFile(files[0])
   setAvatar(convertBinaryToImageUrl(content))
@@ -102,7 +115,16 @@ async function updateAvatar(files) {
         @update:modelValue="valid = $event"
       >
         <v-avatar size="90" @click="dialog = true">
-          <v-img alt="Avatar" :src="avatar"></v-img>
+          <v-img alt="Avatar" :src="avatar" elevation="3">
+            <template v-slot:error>
+              <v-img
+                class="mx-auto"
+                height="300"
+                max-width="500"
+                src="/src/assets/OIP.jpg"
+              ></v-img>
+            </template>
+          </v-img>
         </v-avatar>
         <br />
 
@@ -120,11 +142,13 @@ async function updateAvatar(files) {
           v-model="username"
           label="Username"
           :disabled="disabled"
+          :rules="usernameRules"
         ></v-text-field>
         <v-text-field
           v-model="profile"
           label="Profile"
           :disabled="disabled"
+          :rules="profileRules"
         ></v-text-field>
         <v-btn class="mt-2 mx-auto w-50" @click="updateInfo" v-if="disabled">
           Update

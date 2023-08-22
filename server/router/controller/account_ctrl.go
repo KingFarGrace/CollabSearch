@@ -43,6 +43,19 @@ func (receiver *AccountController) Register(routerGroup *gin.RouterGroup) {
 				context.JSON(http.StatusUnauthorized, resp)
 			}
 		})
+	// GET "/user/:key
+	routerGroup.GET(
+		"/:key",
+		middleware.JWTAuth(),
+		middleware.JWTInterceptor(),
+		func(context *gin.Context) {
+			key := context.Param("key")
+			if resp := service.SearchUser(key); resp.Success() {
+				context.JSON(http.StatusOK, resp)
+			} else {
+				context.JSON(http.StatusUnprocessableEntity, resp)
+			}
+		})
 	// POST "/user"
 	routerGroup.POST(
 		"",

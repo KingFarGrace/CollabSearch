@@ -1,9 +1,5 @@
 import { ref } from 'vue'
 import { defineStore } from 'pinia'
-import {
-  workspaceGetJoinedService,
-  workspaceGetCreatedService
-} from '@/api/workspace'
 
 export const useUWStore = defineStore(
   'user-workspace',
@@ -12,30 +8,29 @@ export const useUWStore = defineStore(
     const setJoined = (joined) => {
       joinedWorkspaces.value = joined
     }
-    const getJoinedWorkspaces = async ({ uid }) => {
-      const joinedWorkspaces = await workspaceGetJoinedService({ uid })
-      setJoined(joinedWorkspaces)
+    const getJoinedWorkspaceByWid = (wid) => {
+      for (let i = 0; i < joinedWorkspaces.value.length; i++) {
+        const workspace = joinedWorkspaces.value[i]
+        if (workspace.wid === wid) return workspace
+      }
     }
     const createdWorkspaces = ref([])
     const setCreated = (created) => {
       createdWorkspaces.value = created
     }
-    const getCreatedWorkspacesByWid = (wid) => {
+    const getCreatedWorkspaceByWid = (wid) => {
       for (let i = 0; i < createdWorkspaces.value.length; i++) {
-        const workspace = createdWorkspaces[i]
+        const workspace = createdWorkspaces.value[i]
         if (workspace.wid === wid) return workspace
       }
     }
-    const getCreatedWorkspaces = async ({ uid }) => {
-      const createdWorkspaces = await workspaceGetCreatedService({ uid })
-      setCreated(createdWorkspaces)
-    }
     return {
       joinedWorkspaces,
-      getJoinedWorkspaces,
+      setJoined,
+      getJoinedWorkspaceByWid,
       createdWorkspaces,
-      getCreatedWorkspacesByWid,
-      getCreatedWorkspaces
+      setCreated,
+      getCreatedWorkspaceByWid
     }
   },
   { persist: true }

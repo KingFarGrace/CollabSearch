@@ -72,8 +72,12 @@ func GetCompositeKey(parts ...interface{}) string {
 	return builder.String()
 }
 
+func Time2String(datetime time.Time) string {
+	return datetime.Format("02-01-2006 15:04:05")
+}
+
 func String2Time(timeStr string) (time.Time, bool) {
-	t, err := time.Parse("2006-01-02 15:04:05", timeStr)
+	t, err := time.Parse("02-01-2006 15:04:05", timeStr)
 	if err != nil {
 		return t, false
 	}

@@ -27,6 +27,16 @@ func InsertUserWorkspace(uw entity.UserWorkspace) bool {
 	return true
 }
 
+func SelectWorkspaceByWid(wid int) *entity.Workspace {
+	engine := getEngine()
+	workspace := new(entity.Workspace)
+	get, err := engine.ID(wid).Get(workspace)
+	if err != nil || !get {
+		return nil
+	}
+	return workspace
+}
+
 func SelectWorkspacesByUid(uid int64) []entity.Workspace {
 	engine := getEngine()
 	joins := make([]entity.UserWorkspaceJoin, 0)
@@ -52,6 +62,18 @@ func SelectWorkspacesByHandler(handlerID int64) []entity.Workspace {
 		return nil
 	}
 	return workspaces
+}
+
+func SelectUsersByWid(wid int) []entity.User {
+	engine := getEngine()
+	users := make([]entity.User, 0)
+	err := engine.Table("user").
+		Join("INNER", "user_workspace", "user_workspace.uid=user.uid").
+		Where("user_workspace.wid=?", wid).Find(&users)
+	if err != nil {
+		return nil
+	}
+	return users
 }
 
 func UpdateWorkspace(workspace entity.Workspace) bool {

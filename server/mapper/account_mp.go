@@ -57,10 +57,13 @@ func SelectUserByEmail(email string) *entity.User {
 	}
 }
 
+// SelectUserByEmailLike
+// cmd: SELECT * FROM user WHERE email LIKE %key%
 func SelectUserByEmailLike(key string) []entity.User {
 	engine := getEngine()
 	users := make([]entity.User, 0)
-	err := engine.Table("user").Where("name LIKE ?", key).Find(&users)
+	cond := util.Concat("%", key, "%")
+	err := engine.Where("email LIKE ?", cond).Find(&users)
 	if err != nil {
 		return nil
 	}

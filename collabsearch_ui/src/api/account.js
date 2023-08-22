@@ -22,3 +22,7 @@ export const accountUpdateService = (uid, email, username, profile, avatar) => {
 export const accountJoinWorkspaceService = (uid, wid) => {
   return instance.post(groupPath + '/workspace', { uid, wid })
 }
+
+export const accountSearchUsersByEmailService = (key) => {
+  return instance.get(groupPath + '/' + key)
+}

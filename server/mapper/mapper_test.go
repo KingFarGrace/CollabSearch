@@ -105,3 +105,18 @@ func TestGetLatestRIDByWid(t *testing.T) {
 	conf.InitCachingLayer()
 	fmt.Println(GetLatestRIDByWid(1))
 }
+
+func TestSelectUserByEmailLike(t *testing.T) {
+	conf.InitPersistenceLayer()
+	fmt.Println(SelectUserByEmailLike("king"))
+}
+
+func TestSelectUsersByWid(t *testing.T) {
+	conf.InitPersistenceLayer()
+	fmt.Println(SelectUsersByWid(4))
+}
+
+func TestSelectWorkspaceByWid(t *testing.T) {
+	conf.InitPersistenceLayer()
+	fmt.Println(SelectWorkspaceByWid(4))
+}

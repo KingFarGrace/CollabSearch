@@ -36,15 +36,38 @@ func GetWorkspaces(id int64, isHandler bool) *response.WorkspaceResponse {
 	if isHandler {
 		workspaces = mapper.SelectWorkspacesByHandler(id)
 		if workspaces != nil {
+			for idx, workspace := range workspaces {
+				workspaces[idx].DueString = util.Time2String(workspace.Due)
+			}
 			return getSuccessWorkspaceResp(workspaces...)
 		}
 	} else {
 		workspaces = mapper.SelectWorkspacesByUid(id)
+		for idx, workspace := range workspaces {
+			workspaces[idx].DueString = util.Time2String(workspace.Due)
+		}
 		if workspaces != nil {
 			return getSuccessWorkspaceResp(workspaces...)
 		}
 	}
 	return getFailedWorkspaceResp(4, "Failed to get workspaces information.")
+}
+
+// GetWorkspaceParticipants will return a user slice whose first element is the
+// handler of the workspace:<wid> and others are collaborators.
+// Specially, this service will return an AccountResponse but set in workspace controller.
+func GetWorkspaceParticipants(wid int) *response.AccountResponse {
+	currentWorkspace := mapper.SelectWorkspaceByWid(wid)
+	if currentWorkspace == nil {
+		return getFailedAccountResp(4, "Failed to get workspace.")
+	}
+	// To optimise: go routine.
+	handler := mapper.SelectUserByUid(currentWorkspace.Handler)
+	collaborators := mapper.SelectUsersByWid(wid)
+	if handler == nil || collaborators == nil {
+		return getFailedAccountResp(3, "Failed to load participants of workspace.")
+	}
+	return getSuccessAccountResp(append([]entity.User{*handler}, collaborators...)...)
 }
 
 // UpdateWorkspace allow handler to update the information of a workspace.

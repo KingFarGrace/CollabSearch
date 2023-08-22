@@ -8,7 +8,7 @@ const instance = axios.create({
 
 instance.defaults.headers.post['Content-Type'] =
   'application/json;charset=UTF-8'
-instance.defaults.headers.get['Content-Type'] = 'application/json;charset=UTF-8'
+instance.defaults.headers.get['Content-Type'] = 'charset=UTF-8'
 instance.defaults.headers.put['Content-Type'] = 'application/json;charset=UTF-8'
 instance.defaults.headers.delete['Content-Type'] =
   'application/json;charset=UTF-8'
@@ -60,4 +60,32 @@ instance.interceptors.response.use(
   }
 )
 
+const outside = axios.create({
+  timeout: 10000
+})
+
+outside.defaults.headers.get['Content-Type'] = 'application/json;charset=UTF-8'
+outside.defaults.headers.post['Content-Type'] = 'application/json;charset=UTF-8'
+
+outside.interceptors.request.use(
+  function (config) {
+    // Before sending request...
+    return config
+  },
+  function (error) {
+    // Do something if request error.
+    return Promise.reject(error)
+  }
+)
+
+outside.interceptors.response.use(
+  function (response) {
+    return response
+  },
+  function (error) {
+    return Promise.reject(error)
+  }
+)
+
 export default instance
+export { outside }
