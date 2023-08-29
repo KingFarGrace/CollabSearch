@@ -19,6 +19,13 @@ export const accountUpdateService = (uid, email, username, profile, avatar) => {
   return instance.put(groupPath, { uid, email, username, profile, avatar })
 }
 
+// export const accountUpdateAvatarService = (uid, avatar) => {
+//   const formData = new FormData()
+//   formData.append('avatar', avatar)
+//   formData.append('uid', uid)
+//   return instance.post(groupPath + '/avatar', formData)
+// }
+
 export const accountJoinWorkspaceService = (uid, wid) => {
   return instance.post(groupPath + '/workspace', { uid, wid })
 }

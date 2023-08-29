@@ -65,7 +65,6 @@ const outside = axios.create({
 })
 
 outside.defaults.headers.get['Content-Type'] = 'application/json;charset=UTF-8'
-outside.defaults.headers.post['Content-Type'] = 'application/json;charset=UTF-8'
 
 outside.interceptors.request.use(
   function (config) {

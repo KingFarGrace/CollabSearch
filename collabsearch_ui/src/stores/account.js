@@ -18,7 +18,7 @@ export const useAccountStore = defineStore(
       setEmail('')
       setUsername('')
       setProfile('')
-      setAvatar(defaultAvatarPath)
+      setAvatar('')
       isLogin.value = false
     }
     const uid = ref(0)
@@ -38,16 +38,10 @@ export const useAccountStore = defineStore(
       profile.value = newProfile
     }
     // Default avatar path
-    const defaultAvatarPath = 'src/assets/OIP.jpg'
-    const avatar = ref(defaultAvatarPath)
-    const setAvatar = (newAvatar) => {
-      if (newAvatar) {
-        avatar.value = newAvatar
-      } else {
-        avatar.value = defaultAvatarPath
-      }
+    const avatar = ref('')
+    const setAvatar = (content) => {
+      avatar.value = content
     }
-
     const setAll = ({
       uid: newUid,
       email: newEmail,
@@ -78,7 +72,6 @@ export const useAccountStore = defineStore(
       profile,
       setProfile,
       avatar,
-      defaultAvatarPath,
       setAvatar,
       setAll
     }

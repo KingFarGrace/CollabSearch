@@ -53,59 +53,6 @@ func TestSelectWorkspacesByUid(t *testing.T) {
 	fmt.Println(workspaces)
 }
 
-func TestSetResult(t *testing.T) {
-	conf.InitCachingLayer()
-	result := entity.Result{
-		Uid:    1,
-		Wid:    1,
-		Title:  "wtf",
-		URL:    "http://localhost.com",
-		Phrase: "wtf",
-	}
-	if !SetHistory(result) {
-		t.Errorf("Failed")
-	}
-}
-
-func TestSetNX(t *testing.T) {
-	conf.InitCachingLayer()
-	client := getClient()
-	ctx, cancel := getDefaultContext()
-	defer cancel()
-	result, err := client.SetNX(ctx, "test", "yes", 0).Result()
-	if err != nil {
-		t.Errorf("result: %v err: %v", result, err)
-	}
-}
-
-func TestSetHistory(t *testing.T) {
-	conf.InitCachingLayer()
-	result := entity.Result{
-		Uid:    3,
-		Wid:    1,
-		Title:  "wtf3",
-		URL:    "http://localhost.com",
-		Phrase: "wtf3",
-	}
-	if !SetHistory(result) {
-		t.Errorf("Failed.")
-	}
-}
-
-func TestGetHistoriesByResultKey(t *testing.T) {
-	conf.InitCachingLayer()
-	if histories := GetHistoriesByResultKey(0, 1); histories == nil {
-		t.Errorf("Failed: histories is nil.")
-	} else {
-		fmt.Println(histories)
-	}
-}
-
-func TestGetLatestRIDByWid(t *testing.T) {
-	conf.InitCachingLayer()
-	fmt.Println(GetLatestRIDByWid(1))
-}
-
 func TestSelectUserByEmailLike(t *testing.T) {
 	conf.InitPersistenceLayer()
 	fmt.Println(SelectUserByEmailLike("king"))
@@ -119,4 +66,46 @@ func TestSelectUsersByWid(t *testing.T) {
 func TestSelectWorkspaceByWid(t *testing.T) {
 	conf.InitPersistenceLayer()
 	fmt.Println(SelectWorkspaceByWid(4))
+}
+
+func TestSetPhrase(t *testing.T) {
+	conf.InitCachingLayer()
+	result := entity.Result{
+		ResultIndex: entity.ResultIndex{
+			Wid: 1,
+			URL: "http://test1.resultMapper.com",
+		},
+		Phrase: "apple",
+	}
+	if !SetPhrase(result) {
+		t.Errorf("Failed.")
+	}
+}
+
+func TestGetPhrasesByWid(t *testing.T) {
+	conf.InitCachingLayer()
+	fmt.Println(GetPhrasesByWid(1))
+}
+
+func TestSetNote(t *testing.T) {
+	conf.InitCachingLayer()
+	note := entity.Note{
+		ResultIndex: entity.ResultIndex{
+			Wid: 1,
+			URL: "http://test1.resultMapper.com",
+		},
+		Content:  "Test Content.",
+		Feedback: 5,
+	}
+	if !SetNote(note) {
+		t.Errorf("Failed.")
+	}
+}
+
+func TestGetNotes(t *testing.T) {
+	conf.InitCachingLayer()
+	fmt.Println(GetNotes(entity.ResultIndex{
+		Wid: 1,
+		URL: "http://test1.resultMapper.com",
+	}))
 }

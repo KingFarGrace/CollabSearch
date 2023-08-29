@@ -63,6 +63,20 @@ func ValidateSearchingJSON() gin.HandlerFunc {
 	return validateJSON(jsonObj)
 }
 
+// ValidateNoteJSON is a middleware to validate note data.
+// @See entity.Note for detail validation rules.
+func ValidateNoteJSON() gin.HandlerFunc {
+	var jsonObj entity.Note
+	return validateJSON(jsonObj)
+}
+
+// ValidateResultIndexJSON is a middleware to validate note data.
+// @See entity.ResultIndex for detail validation rules.
+func ValidateResultIndexJSON() gin.HandlerFunc {
+	var jsonObj entity.ResultIndex
+	return validateJSON(jsonObj)
+}
+
 // validateJSON
 // An encapsulation of different middleware func.
 // Pass verified json obj or abort with return code http.StatusBadRequest.

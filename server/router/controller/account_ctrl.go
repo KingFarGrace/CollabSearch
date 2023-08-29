@@ -82,6 +82,37 @@ func (receiver *AccountController) Register(routerGroup *gin.RouterGroup) {
 				context.JSON(http.StatusUnprocessableEntity, resp)
 			}
 		})
+	//// PUT "/user/avatar"
+	//routerGroup.POST(
+	//	"/avatar",
+	//	middleware.JWTAuth(),
+	//	middleware.JWTInterceptor(),
+	//	func(context *gin.Context) {
+	//		avatar, _, err := context.Request.FormFile("avatar")
+	//		fmt.Println(avatar)
+	//		if err != nil {
+	//			util.ErrorLogger(err, "context.Request.FormFile()")
+	//			context.JSON(http.StatusBadRequest, gin.H{"Msg": "Invalid file data."})
+	//			return
+	//		}
+	//		content, err := io.ReadAll(avatar)
+	//		if err != nil {
+	//			util.ErrorLogger(err, "io.ReadAll()")
+	//			context.JSON(http.StatusUnprocessableEntity, gin.H{"Msg": "Cannot resolve file data."})
+	//			return
+	//		}
+	//		formValue := context.PostForm("uid")
+	//		uid, ok := util.String2Int64(formValue)
+	//		if !ok {
+	//			context.JSON(http.StatusBadRequest, gin.H{"Msg": "Invalid form data."})
+	//			return
+	//		}
+	//		if resp := service.UpdateAvatar(uid, content); resp.Success() {
+	//			context.JSON(http.StatusOK, resp)
+	//		} else {
+	//			context.JSON(http.StatusUnprocessableEntity, resp)
+	//		}
+	//	})
 	// POST "/user/workspace"
 	routerGroup.POST(
 		"/workspace",

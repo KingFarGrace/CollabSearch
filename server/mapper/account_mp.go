@@ -1,6 +1,7 @@
 package mapper
 
 import (
+	"fmt"
 	"github.com/KingFarGrace/CollabSearch/server/entity"
 	"github.com/KingFarGrace/CollabSearch/server/util"
 )
@@ -78,10 +79,21 @@ func UpdateUser(newData entity.User) bool {
 	engine := getEngine()
 	_, err := engine.ID(newData.Uid).Update(&newData)
 	if err != nil {
+		fmt.Println(err)
 		return false
 	}
 	return true
 }
+
+//func UpdateAvatar(uid int64, newAvatar []uint8) bool {
+//	engine := getEngine()
+//	user := new(entity.User)
+//	_, err := engine.ID(uid).Update(&user)
+//	if err != nil {
+//		return false
+//	}
+//	return true
+//}
 
 func DeleteUser(user entity.User) bool {
 	engine := getEngine()

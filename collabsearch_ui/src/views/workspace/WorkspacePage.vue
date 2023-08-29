@@ -3,14 +3,10 @@ import { computed, onMounted, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { storeToRefs } from 'pinia'
 import { useWorkspaceStore } from '@/stores/workspace'
-import { searchRequestService } from '@/api/search'
+import { useResultStore } from '@/stores/result'
+import { searchRequestService, searchGetAvgScoreService } from '@/api/search'
 import { workspaceGetParticipantsService } from '@/api/workspace'
-// Pagination
-var page = ref(1)
-var pageNum = computed(() => {
-  return page.value - 1
-})
-var maxPage = ref(0)
+
 var MAX_CAP = 10
 // Nav
 var drawer = ref(true)
@@ -30,29 +26,74 @@ var handler = computed(() => {
 var collaborators = computed(() => {
   return participants.value.slice(1)
 })
-// Search
-var loading = ref(false)
+// Search & Pagination
+const items = [
+  {
+    title: 'Item #1',
+    value: 1
+  },
+  {
+    title: 'Item #2',
+    value: 2
+  },
+  {
+    title: 'Item #3',
+    value: 3
+  }
+]
+const { currentPhrase, currentPage, maxPage, resultsInPage } = storeToRefs(
+  useResultStore()
+)
+const {
+  setCurrentPage,
+  setCurrentPhrase,
+  setMaxPage,
+  setResultsInPage,
+  resetSearchingPage
+} = useResultStore()
 var phrase = ref('')
-var searchResults = ref([])
+var loading = ref(false)
 async function search() {
   if (!phrase.value) {
+    resetSearchingPage
     return
+  }
+  // If phrase in input field not equal to the one in storage,
+  // update the pagination and searching phrase.
+  if (phrase.value !== currentPhrase.value) {
+    setCurrentPage(1)
+    setCurrentPhrase(phrase.value)
   }
   loading.value = true
   try {
     const resp = await searchRequestService(
-      phrase.value,
-      pageNum.value,
+      currentPhrase.value,
+      currentPage.value - 1,
       MAX_CAP
     )
-    maxPage.value = Math.ceil(resp.data.result.count / MAX_CAP)
-    searchResults.value = resp.data.result.results
-    console.log(searchResults.value)
+    const max = Math.ceil(resp.data.result.count / MAX_CAP)
+    const results = resp.data.result.results
+    for (let i = 0; i < results.length; i++) {
+      var result = results[i]
+      try {
+        var avg = await searchGetAvgScoreService(wid.value, result.resource)
+      } catch (error) {
+        console.log(error)
+      }
+      result.color = getColor(avg.Avg)
+    }
+    setMaxPage(max)
+    setResultsInPage(results)
   } catch (error) {
     console.log(error)
   } finally {
     loading.value = false
   }
+}
+
+function reset() {
+  phrase.value = ''
+  resetSearchingPage()
 }
 
 async function getParticipants() {
@@ -64,13 +105,28 @@ async function getParticipants() {
   }
 }
 
+function getColor(feedback) {
+  try {
+    if (feedback === 0) return 'grey-lighten-1'
+    if (feedback > 0 && feedback < 3) return 'grey-darken-1'
+    if (feedback >= 3 && feedback < 5) return 'green-accent-3'
+    if (feedback === 5) return 'green-accent-4'
+  } catch (error) {
+    console.log(error)
+  }
+}
+
 const router = useRouter()
-function goDetailPage() {
+const { setResult } = useResultStore()
+function goDetailPage(result) {
+  setResult(result)
+  console.log(result.distributions)
   router.push('/workspace/detail')
 }
 
 onMounted(() => {
   getParticipants()
+  phrase.value = currentPhrase.value
 })
 </script>
 <template>
@@ -120,22 +176,28 @@ onMounted(() => {
         density="compact"
         variant="solo"
         label="Search in data.europa.eu, sort by update time in descending order."
+        prepend-inner-icon="mdi-close"
         append-inner-icon="mdi-magnify"
         single-line
         hide-details
+        @click:prependInner="reset"
         @click:append-inner="search"
       ></v-text-field>
+      <v-card class="mx-auto" max-width="300" v-if="false">
+        <v-list :items="items"></v-list>
+      </v-card>
     </v-row>
     <v-row
-      ><v-card class="mx-auto my-2 w-100" v-if="searchResults.length !== 0"
+      ><v-card class="mx-auto my-2 w-100" v-if="resultsInPage.length !== 0"
         ><v-list lines="three">
           <v-list-item
-            v-for="result in searchResults"
+            v-for="result in resultsInPage"
             :key="result.id"
             :title="result?.title?.en"
             :subtitle="result?.description?.en"
             prepend-icon="mdi-circle-small"
-            @click="console.log(result)"
+            :base-color="result.color"
+            @click="goDetailPage(result)"
           ></v-list-item></v-list></v-card
     ></v-row>
 
@@ -143,7 +205,7 @@ onMounted(() => {
       ><v-card class="text-center mx-auto my-2">
         <v-pagination
           v-if="maxPage !== 0"
-          v-model="page"
+          v-model="currentPage"
           :length="maxPage"
           :total-visible="7"
           @update:modelValue="search"

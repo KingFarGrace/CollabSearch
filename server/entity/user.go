@@ -7,7 +7,7 @@ type User struct {
 	Username string `xorm:"notnull" json:"username" validate:"omitempty,alphanum|ascii,min=1,max=32"`
 	Password string `xorm:"notnull" json:"password" validate:"omitempty,alphanum|ascii,min=6,max=16"`
 	Profile  string `json:"profile" validate:"omitempty,alphanumunicode|ascii"`
-	Avatar   string `xorm:"notnull" json:"avatar" validate:"-"`
+	Avatar   string `xorm:"mediumtext" json:"avatar" validate:"omitempty,base64url"`
 }
 
 // RegisterJSON is a JSON entity to receive and pass user's sign up data.

@@ -92,7 +92,7 @@ func String2Int64(str string) (int64, bool) {
 	return i, true
 }
 
-func String2Int64Arr(strs []string) []int64 {
+func Strings2Int64Arr(strs []string) []int64 {
 	iArr := make([]int64, 0)
 	for _, str := range strs {
 		if i, success := String2Int64(str); success {
