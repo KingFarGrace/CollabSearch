@@ -26,5 +26,9 @@ func InitRouter() *gin.Engine {
 		controllers.ResultController.Register(workspaceGroup)
 		controllers.NoteController.Register(workspaceGroup)
 	}
+	messageGroup := router.Group("/msg")
+	{
+		controllers.MessageController.Register(messageGroup)
+	}
 	return router
 }

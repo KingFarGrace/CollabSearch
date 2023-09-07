@@ -77,6 +77,13 @@ func ValidateResultIndexJSON() gin.HandlerFunc {
 	return validateJSON(jsonObj)
 }
 
+// ValidateMessage is a middleware to validate message data.
+// @See entity.Message for detail validation rules.
+func ValidateMessage() gin.HandlerFunc {
+	var jsonObj entity.Message
+	return validateJSON(jsonObj)
+}
+
 // validateJSON
 // An encapsulation of different middleware func.
 // Pass verified json obj or abort with return code http.StatusBadRequest.

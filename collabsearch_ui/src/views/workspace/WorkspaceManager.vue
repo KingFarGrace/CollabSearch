@@ -5,16 +5,21 @@ import '@vuepic/vue-datepicker/dist/main.css'
 import { storeToRefs } from 'pinia'
 import { useWorkspaceStore } from '@/stores/workspace'
 import { useAccountStore } from '@/stores/account'
+import { useMessageStore } from '@/stores/message'
 import { workspaceUpdateService } from '@/api/workspace'
 import { datetimeToString } from '@/utils/formatter'
 import { stringToDatetime } from '@/utils/formatter'
-import { accountSearchUsersByEmailService } from '@/api/account'
+import {
+  accountSearchUsersByEmailService,
+  accountJoinWorkspaceService
+} from '@/api/account'
+import { sendMessageService } from '@/api/message'
 // Messager
 var messager = ref(false)
 var timeout = ref(2000)
 var updMsg = ref('')
 // Dialog
-var { uid } = useAccountStore()
+var { uid, username } = useAccountStore()
 var dialog = ref(false)
 var loading = ref(false)
 var key = ref('')
@@ -87,7 +92,26 @@ async function searchUserByEmail() {
 }
 
 // TODO: Add user to workspace, user will receive a notification.
-async function addUser() {}
+async function addUser(user) {
+  try {
+    await accountJoinWorkspaceService(user.uid, wid)
+    await sendMessageService(
+      uid,
+      user.uid,
+      'You\'ve been invited to workspace "' +
+        topic.value +
+        '" which is belong to ' +
+        username +
+        '(' +
+        uid +
+        ')\n' +
+        new Date()
+    )
+  } catch (error) {
+    updMsg.value = error.Msg
+    messager.value = true
+  }
+}
 
 onMounted(() => {
   dueTime.value = stringToDatetime(due.value)
@@ -185,7 +209,7 @@ onMounted(() => {
           :title="user?.email"
           :subtitle="user?.username"
           :prepend-avatar="user?.avatar || '/src/assets/OIP.jpg'"
-          @click="console.log(user)"
+          @click="addUser(user)"
         ></v-list-item>
       </v-list>
       <v-card-actions>

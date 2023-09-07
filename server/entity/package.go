@@ -10,5 +10,6 @@ type Serializable interface {
 		Result |
 		SearchingJSON |
 		Note |
-		ResultIndex
+		ResultIndex |
+		Message
 }

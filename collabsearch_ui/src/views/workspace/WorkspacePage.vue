@@ -106,14 +106,10 @@ async function getParticipants() {
 }
 
 function getColor(feedback) {
-  try {
-    if (feedback === 0) return 'grey-lighten-1'
-    if (feedback > 0 && feedback < 3) return 'grey-darken-1'
-    if (feedback >= 3 && feedback < 5) return 'green-accent-3'
-    if (feedback === 5) return 'green-accent-4'
-  } catch (error) {
-    console.log(error)
-  }
+  if (feedback === 0) return 'grey-lighten-1'
+  if (feedback > 0 && feedback < 3) return 'grey-darken-1'
+  if (feedback >= 3 && feedback < 5) return 'green-accent-3'
+  if (feedback === 5) return 'green-accent-4'
 }
 
 const router = useRouter()

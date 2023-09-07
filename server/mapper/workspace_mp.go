@@ -2,6 +2,7 @@ package mapper
 
 import (
 	"github.com/KingFarGrace/CollabSearch/server/entity"
+	"github.com/KingFarGrace/CollabSearch/server/util"
 )
 
 func InsertWorkspace(workspace entity.Workspace) bool {
@@ -20,8 +21,9 @@ func InsertWorkspace(workspace entity.Workspace) bool {
 
 func InsertUserWorkspace(uw entity.UserWorkspace) bool {
 	engine := getEngine()
-	affected, err := engine.Insert(&uw)
-	if err != nil || affected == 0 {
+	_, err := engine.Insert(&uw)
+	if err != nil {
+		util.ErrorLogger(err, "InsertUserWorkspace")
 		return false
 	}
 	return true

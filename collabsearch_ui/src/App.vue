@@ -1,15 +1,24 @@
 <script setup>
+import { onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { VContainer } from 'vuetify/lib/components/index.mjs'
 import { useAccountStore } from '@/stores/account'
 import { storeToRefs } from 'pinia'
 import { useTheme } from 'vuetify'
+import { useMessageStore } from '@/stores/message'
+import { getMessagesService } from '@/api/message'
+// Theme
 const theme = useTheme()
 function toggleTheme() {
   theme.global.name.value = theme.global.current.value.dark ? 'light' : 'dark'
 }
-var store = useAccountStore()
-var { isLogin, email, username, avatar } = storeToRefs(store)
+// Budge
+var messageStore = useMessageStore()
+var { messages } = storeToRefs(messageStore)
+var { setMessages } = messageStore
+// Navibar
+var accountStore = useAccountStore()
+var { isLogin, uid, email, username, avatar } = storeToRefs(accountStore)
 var router = useRouter()
 function goAuthPage() {
   router.push('/login')
@@ -26,6 +35,22 @@ function goWorkspaceHandlerPage() {
 function goWorkspaceCreatorPage() {
   router.push('/workspace/create')
 }
+
+async function getMessages() {
+  try {
+    var data = await getMessagesService(uid.value)
+  } catch (error) {
+    console.log(error)
+  }
+  setMessages(data.Messages)
+}
+// TODO: Logout should clear all data, not only user's account data.
+// FIXME: Get workspace users bug.
+// TODO: Why uid changed?
+// TODO: Show messages.
+onMounted(() => {
+  getMessages()
+})
 </script>
 
 <template>
@@ -70,7 +95,9 @@ function goWorkspaceCreatorPage() {
       <v-app-bar>
         <v-spacer></v-spacer>
         <v-btn icon>
-          <v-icon>mdi-message-reply-text-outline</v-icon>
+          <v-badge :content="messages.length" color="error">
+            <v-icon>mdi-message-reply-text-outline</v-icon>
+          </v-badge>
         </v-btn>
         <template v-slot:append>
           <v-btn icon="mdi-theme-light-dark" @click="toggleTheme"></v-btn>

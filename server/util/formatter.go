@@ -103,3 +103,18 @@ func Strings2Int64Arr(strs []string) []int64 {
 	}
 	return iArr
 }
+
+func Bool2Float64(b bool) float64 {
+	if b {
+		return 1
+	} else {
+		return 0
+	}
+}
+
+func Int2Bool(i int) bool {
+	if i == 0 {
+		return false
+	}
+	return true
+}

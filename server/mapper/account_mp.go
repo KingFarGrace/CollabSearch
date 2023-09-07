@@ -65,6 +65,9 @@ func SelectUserByEmailLike(key string) []entity.User {
 	users := make([]entity.User, 0)
 	cond := util.Concat("%", key, "%")
 	err := engine.Where("email LIKE ?", cond).Find(&users)
+	for i, _ := range users {
+		users[i].Password = ""
+	}
 	if err != nil {
 		return nil
 	}

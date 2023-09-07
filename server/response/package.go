@@ -43,3 +43,4 @@ const AccountGroupCode = 1
 const WorkspaceGroupCode = 2
 const ResultGroupCode = 3
 const NoteGroupCode = 4
+const MessageGroupCode = 5

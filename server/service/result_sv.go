@@ -1,7 +1,6 @@
 package service
 
 import (
-	"fmt"
 	"github.com/KingFarGrace/CollabSearch/server/entity"
 	"github.com/KingFarGrace/CollabSearch/server/mapper"
 	"github.com/KingFarGrace/CollabSearch/server/response"
@@ -37,18 +36,12 @@ func GetSearchingHints(search entity.SearchingJSON) []string {
 			matchedPhrases = append(matchedPhrases, phrase)
 		}
 	}
-	fmt.Println(matchedPhrases)
 	return matchedPhrases
 }
 
 // GetLatestSearchingHistory can get searching history with latest rid in the workspace.
 func GetLatestSearchingHistory(wid int) *response.ResultResponse {
-	history := new(entity.SearchingHistory)
-	history = mapper.GetHistoryByRid(mapper.GetLatestRIDByWid(wid))
-	if history == nil {
-		return getFailedResultResp(3, "Failed to get latest searching history.")
-	}
-	return getSuccessResultResp(*history)
+	return nil
 }
 
 // SetNote to set note
