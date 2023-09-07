@@ -47,7 +47,7 @@ func JWTInterceptor() gin.HandlerFunc {
 	return func(context *gin.Context) {
 		jwtAuth := context.MustGet("jwtAuth").(bool)
 		if !jwtAuth {
-			context.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"msg": "Authentication required."})
+			context.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"Msg": "Authentication required."})
 			return
 		}
 		context.Next()

@@ -9,9 +9,6 @@ import (
 	"strings"
 )
 
-// TODO: Give an accurate path.
-var defaultAvatarPath = ""
-
 // Register a new user.
 // Receive a RegisterJSON then convert it to a User instance,
 // then register the User through mapper.
@@ -27,7 +24,7 @@ func Register(registerJSON entity.RegisterJSON) *response.AccountResponse {
 		Username: registerJSON.Username,
 		Password: registerJSON.Password,
 		Profile:  "Introduce yourself to others.",
-		Avatar:   defaultAvatarPath,
+		Avatar:   "",
 	}
 	if success := mapper.InsertUser(user); success {
 		return getSuccessAccountResp()
@@ -74,6 +71,24 @@ func UpdateUser(user entity.User) *response.AccountResponse {
 		return getSuccessAccountResp()
 	}
 	return getFailedAccountResp(5, "Failed to update user data.")
+}
+
+// UpdateAvatar to update user avatar.
+// This is special since the request Content-Type will be different.
+//func UpdateAvatar(uid int64, avatar []uint8) *response.AccountResponse {
+//	if mapper.UpdateAvatar(uid, avatar) {
+//		return getSuccessAccountResp()
+//	}
+//	return getFailedAccountResp(5, "Failed to update user avatar.")
+//}
+
+// SearchUser to get user whose email contains key.
+func SearchUser(key string) *response.AccountResponse {
+	users := mapper.SelectUserByEmailLike(key)
+	if users == nil {
+		return getFailedAccountResp(4, "No users found.")
+	}
+	return getSuccessAccountResp(users...)
 }
 
 func getSuccessAccountResp(users ...entity.User) *response.AccountResponse {

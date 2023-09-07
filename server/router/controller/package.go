@@ -13,6 +13,7 @@ type controllers struct {
 	WorkspaceController
 	ResultController
 	NoteController
+	MessageController
 }
 
 var Controllers = new(controllers)

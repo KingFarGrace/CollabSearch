@@ -20,7 +20,7 @@ func (receiver *AccountController) Register(routerGroup *gin.RouterGroup) {
 		func(context *gin.Context) {
 			claims, exists := context.Get("claims")
 			if !exists {
-				context.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"msg": "Failed to get user claims."})
+				context.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"Msg": "Failed to get user claims."})
 				return
 			}
 			if resp := service.CheckStatus(claims.(entity.TokenClaims)); resp.Success() {
@@ -29,9 +29,9 @@ func (receiver *AccountController) Register(routerGroup *gin.RouterGroup) {
 				context.JSON(http.StatusUnauthorized, resp)
 			}
 		})
-	// GET "/user"
-	routerGroup.GET(
-		"",
+	// POST "/user/login"
+	routerGroup.POST(
+		"/login",
 		middleware.ValidateLoginJSON(),
 		func(context *gin.Context) {
 			jsonObj := context.MustGet("jsonObj").(entity.LoginJSON)
@@ -41,6 +41,19 @@ func (receiver *AccountController) Register(routerGroup *gin.RouterGroup) {
 				context.JSON(http.StatusOK, resp)
 			} else {
 				context.JSON(http.StatusUnauthorized, resp)
+			}
+		})
+	// GET "/user/:key
+	routerGroup.GET(
+		"/:key",
+		middleware.JWTAuth(),
+		middleware.JWTInterceptor(),
+		func(context *gin.Context) {
+			key := context.Param("key")
+			if resp := service.SearchUser(key); resp.Success() {
+				context.JSON(http.StatusOK, resp)
+			} else {
+				context.JSON(http.StatusUnprocessableEntity, resp)
 			}
 		})
 	// POST "/user"
@@ -69,6 +82,37 @@ func (receiver *AccountController) Register(routerGroup *gin.RouterGroup) {
 				context.JSON(http.StatusUnprocessableEntity, resp)
 			}
 		})
+	//// PUT "/user/avatar"
+	//routerGroup.POST(
+	//	"/avatar",
+	//	middleware.JWTAuth(),
+	//	middleware.JWTInterceptor(),
+	//	func(context *gin.Context) {
+	//		avatar, _, err := context.Request.FormFile("avatar")
+	//		fmt.Println(avatar)
+	//		if err != nil {
+	//			util.ErrorLogger(err, "context.Request.FormFile()")
+	//			context.JSON(http.StatusBadRequest, gin.H{"Msg": "Invalid file data."})
+	//			return
+	//		}
+	//		content, err := io.ReadAll(avatar)
+	//		if err != nil {
+	//			util.ErrorLogger(err, "io.ReadAll()")
+	//			context.JSON(http.StatusUnprocessableEntity, gin.H{"Msg": "Cannot resolve file data."})
+	//			return
+	//		}
+	//		formValue := context.PostForm("uid")
+	//		uid, ok := util.String2Int64(formValue)
+	//		if !ok {
+	//			context.JSON(http.StatusBadRequest, gin.H{"Msg": "Invalid form data."})
+	//			return
+	//		}
+	//		if resp := service.UpdateAvatar(uid, content); resp.Success() {
+	//			context.JSON(http.StatusOK, resp)
+	//		} else {
+	//			context.JSON(http.StatusUnprocessableEntity, resp)
+	//		}
+	//	})
 	// POST "/user/workspace"
 	routerGroup.POST(
 		"/workspace",

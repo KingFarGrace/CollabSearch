@@ -1,7 +1,6 @@
 package middleware
 
 import (
-	"fmt"
 	"github.com/KingFarGrace/CollabSearch/server/entity"
 	"github.com/KingFarGrace/CollabSearch/server/util"
 	"github.com/gin-gonic/gin"
@@ -64,6 +63,27 @@ func ValidateSearchingJSON() gin.HandlerFunc {
 	return validateJSON(jsonObj)
 }
 
+// ValidateNoteJSON is a middleware to validate note data.
+// @See entity.Note for detail validation rules.
+func ValidateNoteJSON() gin.HandlerFunc {
+	var jsonObj entity.Note
+	return validateJSON(jsonObj)
+}
+
+// ValidateResultIndexJSON is a middleware to validate note data.
+// @See entity.ResultIndex for detail validation rules.
+func ValidateResultIndexJSON() gin.HandlerFunc {
+	var jsonObj entity.ResultIndex
+	return validateJSON(jsonObj)
+}
+
+// ValidateMessage is a middleware to validate message data.
+// @See entity.Message for detail validation rules.
+func ValidateMessage() gin.HandlerFunc {
+	var jsonObj entity.Message
+	return validateJSON(jsonObj)
+}
+
 // validateJSON
 // An encapsulation of different middleware func.
 // Pass verified json obj or abort with return code http.StatusBadRequest.
@@ -71,12 +91,12 @@ func ValidateSearchingJSON() gin.HandlerFunc {
 func validateJSON[T entity.Serializable](jsonObj T) gin.HandlerFunc {
 	return func(context *gin.Context) {
 		if err := context.ShouldBindBodyWith(&jsonObj, binding.JSON); err != nil {
-			fmt.Printf("%v", jsonObj)
-			context.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"msg": "Invalid request json.", "jsonObj": jsonObj})
+			util.ErrorLogger(err, "ShouldBindBodyWith()")
+			context.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"Msg": "Invalid request json.", "jsonObj": jsonObj})
 			return
 		}
 		if msg := valid(jsonObj); msg != "" {
-			context.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"msg": msg})
+			context.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"Msg": msg})
 			return
 		}
 		context.Set("jsonObj", jsonObj)

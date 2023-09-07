@@ -14,9 +14,9 @@
   ],
   "redis": [
     {
-      "hostname": "svm00483.ecs.soton.ac.uk",
+      "hostname": "127.0.0.1",
       "port": 6379,
-      "password": "132546",
+      "password": "",
       "database": 0
     }
   ],

@@ -72,8 +72,12 @@ func GetCompositeKey(parts ...interface{}) string {
 	return builder.String()
 }
 
+func Time2String(datetime time.Time) string {
+	return datetime.Format("02-01-2006 15:04:05")
+}
+
 func String2Time(timeStr string) (time.Time, bool) {
-	t, err := time.Parse("2006-01-02 15:04:05", timeStr)
+	t, err := time.Parse("02-01-2006 15:04:05", timeStr)
 	if err != nil {
 		return t, false
 	}
@@ -88,7 +92,7 @@ func String2Int64(str string) (int64, bool) {
 	return i, true
 }
 
-func String2Int64Arr(strs []string) []int64 {
+func Strings2Int64Arr(strs []string) []int64 {
 	iArr := make([]int64, 0)
 	for _, str := range strs {
 		if i, success := String2Int64(str); success {
@@ -98,4 +102,19 @@ func String2Int64Arr(strs []string) []int64 {
 		}
 	}
 	return iArr
+}
+
+func Bool2Float64(b bool) float64 {
+	if b {
+		return 1
+	} else {
+		return 0
+	}
+}
+
+func Int2Bool(i int) bool {
+	if i == 0 {
+		return false
+	}
+	return true
 }
